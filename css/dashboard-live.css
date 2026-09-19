@@ -1,0 +1,1310 @@
+:root {
+    --chassis-bg: #15181f;
+    --chassis-metal: #232731;
+    --chassis-bevel: #383e4d;
+    --chassis-shadow: rgba(0, 0, 0, 0.85);
+    --bezel-inset: #0e1015;
+
+    /* LCD Screen Palette (Icom/Yaesu Cyan & Amber Glow) */
+    --lcd-bg: #030d14;
+    --lcd-cyan: #00e5ff;
+    --lcd-cyan-dim: rgba(0, 229, 255, 0.25);
+    --lcd-amber: #ffb300;
+    --lcd-green: #00e676;
+    --lcd-red: #ff1744;
+    --lcd-text-glow: 0 0 8px rgba(0, 229, 255, 0.5);
+
+    /* Tactile Key Colors */
+    --key-cap: #1f232b;
+    --key-cap-hover: #2a2f3b;
+    --key-border: #353b49;
+
+    --btn-red: #d32f2f;
+    --btn-green: #2e7d32;
+    --btn-blue: #0277bd;
+    --btn-purple: #7b1fa2;
+    --btn-orange: #ef6c00;
+
+    --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-lcd: "Courier New", Courier, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #0b0c10;
+    background-image: radial-gradient(#1f2430 1px, transparent 1px);
+    background-size: 20px 20px;
+    color: #e0e6ed;
+    font-family: var(--font-stack);
+    line-height: 1.4;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 30px 16px;
+}
+
+.rig-wrapper {
+    width: 100%;
+    max-width: 980px;
+}
+
+/* Transceiver Main Chassis */
+.rig-chassis {
+    background: linear-gradient(180deg, #252a36 0%, #161920 100%);
+    border: 3px solid #3d4454;
+    border-radius: 12px;
+    box-shadow: 0 20px 50px var(--chassis-shadow),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15),
+                inset 0 0 15px rgba(0, 0, 0, 0.6);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Corner Hex Screws */
+.hex-screw {
+    width: 14px;
+    height: 14px;
+    background: radial-gradient(circle, #8f98a8 30%, #3a404d 100%);
+    border-radius: 50%;
+    border: 1px solid #1a1c22;
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.4), 0 1px 3px rgba(0, 0, 0, 0.8);
+    position: relative;
+}
+
+.hex-screw::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 8px;
+    height: 2px;
+    background: #111317;
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+/* Top Bezel / Brand Header */
+.rig-top-bar {
+    background: linear-gradient(180deg, #2b303d 0%, #1d212a 100%);
+    border-bottom: 2px solid #101217;
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.rig-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-name {
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: 0.15em;
+    color: #f1f5f9;
+    text-shadow: 0 1px 2px #000;
+}
+
+.model-badge {
+    background: #0f1218;
+    color: #38bdf8;
+    border: 1px solid #0284c7;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    font-family: var(--font-lcd);
+    box-shadow: inset 0 1px 4px #000;
+}
+
+.model-desc {
+    font-size: 11px;
+    color: #94a3b8;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+}
+
+.rig-power-section {
+    display: flex;
+    align-items: center;
+}
+
+.power-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #0f1218;
+    padding: 4px 10px;
+    border-radius: 4px;
+    border: 1px solid #2d3340;
+}
+
+.power-led {
+    width: 8px;
+    height: 8px;
+    background: #00e676;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #00e676, 0 0 4px #00e676;
+    animation: power-pulse 2s infinite ease-in-out;
+}
+
+@keyframes power-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.65; }
+}
+
+.power-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #cbd5e1;
+}
+
+/* Upper Deck (LCD Screen & VFO Section) */
+.rig-upper-deck {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 15px;
+    padding: 10px;
+    background: #14171f;
+    border-bottom: 2px solid #0f1116;
+}
+
+/* LCD Screen Housing */
+.lcd-screen-housing {
+    background: #090b10;
+    padding: 10px;
+    border-radius: 8px;
+    border: 2px solid #2c3240;
+    box-shadow: inset 0 4px 15px #000, 0 2px 5px rgba(255, 255, 255, 0.05);
+}
+
+.lcd-screen {
+    background: var(--lcd-bg);
+    border: 1px solid rgba(0, 229, 255, 0.2);
+    border-radius: 5px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+    box-shadow: inset 0 0 30px rgba(0, 229, 255, 0.08);
+}
+
+/* Scanline Overlay */
+.lcd-screen::before {
+    content: " ";
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+    background-size: 100% 4px;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.lcd-header-bar {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-lcd);
+    font-size: 12px;
+    color: var(--lcd-cyan);
+    text-shadow: var(--lcd-text-glow);
+    border-bottom: 1px solid var(--lcd-cyan-dim);
+    padding-bottom: 6px;
+}
+
+.lcd-mem-highlight {
+    color: var(--lcd-amber) !important;
+    font-weight: 900;
+    text-shadow: 0 0 8px rgba(255, 179, 0, 0.6) !important;
+}
+
+.lcd-main-readout {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 4px 0;
+    gap: 12px;
+}
+
+.lcd-callsign {
+    font-family: var(--font-lcd);
+    font-size: 44px;
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    color: #ffffff;
+    text-shadow: 0 0 12px var(--lcd-cyan), 0 0 24px var(--lcd-cyan);
+    line-height: 1;
+}
+
+.lcd-channel-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    font-family: var(--font-lcd);
+    max-width: 55%;
+}
+
+.lcd-subtext {
+    font-size: 13px;
+    color: var(--lcd-amber);
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    text-shadow: 0 0 6px rgba(255, 179, 0, 0.4);
+    transition: color 0.2s ease;
+}
+
+.lcd-frequency {
+    font-size: 16px;
+    color: var(--lcd-cyan);
+    font-weight: 700;
+    text-shadow: var(--lcd-text-glow);
+    letter-spacing: 0.04em;
+    transition: color 0.2s ease;
+}
+
+/* S-Meter */
+.lcd-smeter-container {
+    background: rgba(0, 0, 0, 0.4);
+    padding: 8px 10px;
+    border-radius: 4px;
+    border: 1px solid var(--lcd-cyan-dim);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.smeter-labels {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-lcd);
+    font-size: 10px;
+    font-weight: bold;
+    color: #94a3b8;
+}
+
+.smeter-peak {
+    color: #ff5252;
+}
+
+.smeter-bar {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 3px;
+    height: 10px;
+}
+
+.smeter-segment {
+    background: #111c24;
+    border-radius: 1px;
+    transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.smeter-segment.active-low { background: #00e676; box-shadow: 0 0 6px #00e676; }
+.smeter-segment.active-mid { background: #00e676; box-shadow: 0 0 6px #00e676; }
+.smeter-segment.active-high { background: #ffd600; box-shadow: 0 0 6px #ffd600; }
+.smeter-segment.active-peak { background: #261616; }
+
+.smeter-segment.illuminated-full {
+    background: #ff1744 !important;
+    box-shadow: 0 0 10px #ff1744 !important;
+}
+
+/* Status Flags */
+.lcd-flags-bar {
+    display: flex;
+    gap: 8px;
+    font-family: var(--font-lcd);
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.lcd-flag {
+    padding: 2px 8px;
+    border-radius: 3px;
+    background: #0c141d;
+    color: #475569;
+    border: 1px solid #1e293b;
+}
+
+.lcd-flag.active {
+    border-color: rgba(0, 229, 255, 0.4);
+    color: var(--lcd-cyan);
+    text-shadow: var(--lcd-text-glow);
+}
+
+.flag-rx.active {
+    background: rgba(0, 230, 118, 0.15);
+    color: #00e676;
+    border-color: #00e676;
+    text-shadow: 0 0 6px #00e676;
+}
+
+.flag-tx.active {
+    background: rgba(255, 23, 68, 0.25);
+    color: #ff1744;
+    border-color: #ff1744;
+    text-shadow: 0 0 8px #ff1744;
+    animation: tx-blink 0.4s infinite alternate;
+}
+
+@keyframes tx-blink {
+    from { opacity: 0.8; }
+    to { opacity: 1; }
+}
+
+/* LCD Marquee Status Line */
+.lcd-status-marquee {
+    background: #02070a;
+    border: 1px solid var(--lcd-cyan-dim);
+    padding: 6px 10px;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-lcd);
+    font-size: 12px;
+    font-weight: bold;
+    color: var(--lcd-cyan);
+    text-shadow: var(--lcd-text-glow);
+}
+
+.marquee-icon {
+    color: var(--lcd-amber);
+}
+
+.marquee-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.2s ease;
+}
+
+/* VFO Dial & Right Deck Controls */
+.rig-vfo-deck {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    background: #191d26;
+    border: 2px solid #2b3240;
+    border-radius: 8px;
+    padding: 0px;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+.vfo-dial-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.vfo-dial-bezel {
+    width: 106px;
+    height: 106px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #475063 0%, #1b1e26 100%);
+    padding: 5px;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.7), inset 0 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+.vfo-dial {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: radial-gradient(circle, #2d3342 0%, #151821 100%);
+    border: 2px solid #111317;
+    position: relative;
+    cursor: grab;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.05s ease-out;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+}
+
+.vfo-dial:active {
+    cursor: grabbing;
+}
+
+.vfo-knurling {
+    position: absolute;
+    width: 90%;
+    height: 90%;
+    border-radius: 50%;
+    border: 4px dotted #3d4659;
+}
+
+.vfo-inner-disc {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #3a4354 0%, #161821 100%);
+    border: 1px solid #505c73;
+    position: relative;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.8);
+}
+
+.vfo-dimple {
+    position: absolute;
+    top: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #0b0c10 40%, #4a5468 100%);
+    box-shadow: inset 0 1px 2px #000, 0 1px 1px rgba(255, 255, 255, 0.2);
+}
+
+.vfo-label, .knob-label {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    color: #94a3b8;
+    text-shadow: 0 1px 2px #000;
+}
+
+.rig-knobs-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+}
+
+.rotary-knob-wrapper, .mic-jack-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.rotary-knob {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #3d4557 0%, #171a22 100%);
+    border: 2px solid #111317;
+    position: relative;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.6);
+}
+
+.knob-line {
+    position: absolute;
+    top: 3px;
+    left: 50%;
+    width: 2px;
+    height: 12px;
+    background: #38bdf8;
+    transform: translateX(-50%);
+    border-radius: 1px;
+}
+
+.knob-af { transform: rotate(-30deg); }
+.knob-sql { transform: rotate(45deg); }
+
+/* 8-Pin Mic Jack */
+.mic-jack {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #111317;
+    border: 3px solid #4a5366;
+    position: relative;
+    box-shadow: inset 0 2px 6px #000;
+}
+
+.mic-pin {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: #94a3b8;
+    border-radius: 50%;
+    box-shadow: inset 0 1px 1px #000;
+}
+
+.p1 { top: 6px; left: 16px; }
+.p2 { top: 10px; left: 24px; }
+.p3 { top: 18px; left: 26px; }
+.p4 { top: 24px; left: 20px; }
+.p5 { top: 24px; left: 12px; }
+.p6 { top: 18px; left: 6px; }
+.p7 { top: 10px; left: 8px; }
+.p8 { top: 16px; left: 16px; background: #e2e8f0; }
+
+/* Lower Deck: Keypad Matrix */
+.rig-keypad-deck {
+    padding: 20px 22px;
+    background: #1a1d27;
+}
+
+.keypad-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #2d3342;
+}
+
+.keypad-title {
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    color: #94a3b8;
+    text-shadow: 0 1px 2px #000;
+}
+
+.speaker-grille {
+    display: flex;
+    gap: 4px;
+}
+
+.speaker-grille span {
+    width: 3px;
+    height: 12px;
+    background: #101217;
+    border-radius: 2px;
+    box-shadow: inset 0 1px 2px #000, 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.buttons-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+}
+
+/* Tactile Key Socket & Push-Button */
+.rig-key-socket {
+    background: #0f1117;
+    padding: 3px;
+    border-radius: 8px;
+    box-shadow: inset 0 2px 6px #000, 0 1px 0 rgba(255, 255, 255, 0.1);
+    border: 1px solid #222632;
+}
+
+.rig-key {
+    width: 100%;
+    min-height: 55px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--key-border);
+    cursor: pointer;
+    text-decoration: none;
+    font-family: inherit;
+    text-align: left;
+    color: #ffffff;
+    position: relative;
+    transition: transform 0.08s ease, filter 0.12s ease, box-shadow 0.08s ease, border-color 0.15s ease;
+    user-select: none;
+    outline: none;
+    box-shadow: 0 4px 0 #111318, 0 6px 10px rgba(0, 0, 0, 0.5);
+}
+
+.rig-key:hover {
+    filter: brightness(1.12);
+}
+
+.rig-key:active, .rig-key.key-pressed {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 #111318, 0 2px 4px rgba(0, 0, 0, 0.6);
+    filter: brightness(0.95);
+}
+
+/* Active Selected Memory Channel Key Styling */
+.rig-key.key-selected {
+    border-color: #00e5ff !important;
+    box-shadow: 0 0 14px rgba(0, 229, 255, 0.5), inset 0 0 12px rgba(0, 229, 255, 0.25), 0 4px 0 #111318 !important;
+    filter: brightness(1.18);
+}
+
+.rig-key.key-selected .key-led {
+    box-shadow: 0 0 14px #ffffff, 0 0 8px currentColor !important;
+    transform: scale(1.2);
+}
+
+.rig-key:focus-visible {
+    outline: 2px solid #00e5ff;
+}
+
+/* Key LED Status Lamp */
+.key-led {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #334155;
+    border: 1px solid #101217;
+    flex-shrink: 0;
+    box-shadow: inset 0 1px 2px #000;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.led-green { background: #00e676; box-shadow: 0 0 8px #00e676; }
+.led-blue { background: #00e5ff; box-shadow: 0 0 8px #00e5ff; }
+.led-purple { background: #d500f9; box-shadow: 0 0 8px #d500f9; }
+.led-red { background: #ff1744; box-shadow: 0 0 8px #ff1744; }
+.led-orange { background: #ff9100; box-shadow: 0 0 8px #ff9100; }
+
+.key-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+}
+
+.key-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-lcd);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.key-ch {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.key-code, .key-ext {
+    background: rgba(0, 0, 0, 0.35);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: #ffffff;
+    letter-spacing: 0.05em;
+}
+
+.key-label {
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.25;
+    word-break: break-word;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+/* Key Colors */
+.btn-green { background: linear-gradient(180deg, #1b4d24 0%, #0d2813 100%); border-color: #2e7d32; }
+.btn-blue { background: linear-gradient(180deg, #0d47a1 0%, #072554 100%); border-color: #1976d2; }
+.btn-purple { background: linear-gradient(180deg, #4a148c 0%, #240847 100%); border-color: #7b1fa2; }
+.btn-red { background: linear-gradient(180deg, #b71c1c 0%, #570909 100%); border-color: #d32f2f; }
+.btn-orange { background: linear-gradient(180deg, #e65100 0%, #6e2600 100%); border-color: #f57c00; }
+
+/* Bottom Bezel */
+.rig-bottom-bar {
+    background: linear-gradient(180deg, #1d212a 0%, #151820 100%);
+    border-top: 2px solid #101217;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.rig-footer-text {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: #64748b;
+    font-family: var(--font-lcd);
+}
+
+/* Toast Notification (Transceiver Style) */
+.toast-container {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 9999;
+    pointer-events: none;
+    max-width: 380px;
+}
+
+.toast {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(9, 12, 18, 0.95);
+    border: 1px solid var(--lcd-cyan);
+    color: #ffffff;
+    padding: 12px 18px;
+    border-radius: 6px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 10px rgba(0, 229, 255, 0.3);
+    font-family: var(--font-lcd);
+    font-size: 12px;
+    font-weight: bold;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: auto;
+}
+
+.toast-show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.toast-icon { font-size: 14px; }
+.toast-info .toast-icon { color: var(--lcd-cyan); }
+.toast-success .toast-icon { color: #00e676; }
+.toast-error .toast-icon { color: #ff1744; }
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .rig-upper-deck {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .rig-vfo-deck {
+        flex-direction: row;
+        justify-content: space-around;
+        padding: 12px;
+    }
+
+    .vfo-dial-bezel {
+        width: 80px;
+        height: 80px;
+    }
+
+    .vfo-inner-disc {
+        width: 44px;
+        height: 44px;
+    }
+
+    .lcd-callsign {
+        font-size: 32px;
+    }
+
+    .buttons-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .model-desc {
+        display: none;
+    }
+}
+
+
+.btn-lightblue {
+    background: linear-gradient(180deg, #8ed8ff 0%, #55bff4 52%, #35a8e0 100%);
+    border-color: #bfeaff;
+    color: #06283a;
+}
+.led-lightblue {
+    background: #9de2ff;
+    box-shadow: 0 0 10px #9de2ff;
+}
+.paypal-donate-socket {
+    grid-column: span 2;
+}
+.paypal-donate-key {
+    min-height: 86px;
+    justify-content: center;
+    text-align: center;
+    border-width: 2px;
+    box-shadow: 0 4px 0 #176c96, 0 7px 16px rgba(0,0,0,.55), 0 0 18px rgba(142,216,255,.22);
+}
+.paypal-donate-key .key-inner {
+    align-items: center;
+}
+.paypal-donate-key .key-meta {
+    width: 100%;
+}
+.paypal-donate-key .key-label {
+    font-size: 24px;
+    line-height: 1.1;
+    font-weight: 900;
+    letter-spacing: .045em;
+    color: #06283a;
+    text-shadow: 0 1px 0 rgba(255,255,255,.45);
+}
+.paypal-donate-key .key-ch,
+.paypal-donate-key .key-ext {
+    color: #0a4865;
+}
+@media (max-width: 768px) {
+    .paypal-donate-socket { grid-column: span 1; }
+    .paypal-donate-key .key-label { font-size: 21px; }
+}
+
+/* ============================================================
+   dashboard-live.css
+   Dodatek do style.css — panel "CONNECTED NODES" i drugi
+   wyświetlacz "LAST HEARD". Korzysta ze zmiennych zdefiniowanych
+   w style.css (:root), więc musi być podpięty PO nim.
+   ============================================================ */
+
+/* ---------- Drugi wyświetlacz: LAST HEARD (zamiast wielkiej gałki VFO) --- */
+.lastheard-screen-housing {
+    background: #090b10;
+    padding: 10px;
+    border-radius: 8px;
+    border: 2px solid #2c3240;
+    box-shadow: inset 0 4px 15px #000, 0 2px 5px rgba(255, 255, 255, 0.05);
+    width: 100%;
+}
+
+.rig-vfo-deck {
+    display: flex;
+    flex-direction: column;
+}
+
+.lastheard-screen-housing {
+    height: 275px;
+    display: flex;
+}
+
+.lastheard-lcd {
+    background: var(--lcd-bg);
+    border: 1px solid rgba(0, 229, 255, 0.2);
+    border-radius: 5px;
+    padding: 12px 14px;
+    position: relative;
+    box-shadow: inset 0 0 30px rgba(0, 229, 255, 0.08);
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow: hidden;
+}
+
+/* ta sama nakładka scanline co na głównym LCD */
+.lastheard-lcd::before {
+    content: " ";
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+    background-size: 100% 4px;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.lastheard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-lcd);
+    font-size: 13px;
+    color: var(--lcd-cyan);
+    text-shadow: var(--lcd-text-glow);
+    border-bottom: 1px solid var(--lcd-cyan-dim);
+    padding-bottom: 6px;
+    letter-spacing: 0.06em;
+    flex-shrink: 0;
+}
+
+.lastheard-header .lh-count {
+    color: var(--lcd-amber);
+    font-weight: 900;
+}
+
+.lastheard-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+    min-height: 0; /* bez tego flex-child nie zgodzi się skurczyć i scroll nie zadziała */
+    overflow-y: auto;
+    font-family: var(--font-lcd);
+    font-size: 14px;
+
+    /* cienki scrollbar w motywie panelu, zamiast domyślnego systemowego */
+    scrollbar-width: thin;
+    scrollbar-color: var(--lcd-cyan-dim) transparent;
+}
+
+.lastheard-rows::-webkit-scrollbar {
+    width: 6px;
+}
+
+.lastheard-rows::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.lastheard-rows::-webkit-scrollbar-thumb {
+    background: var(--lcd-cyan-dim);
+    border-radius: 3px;
+}
+
+.lastheard-rows::-webkit-scrollbar-thumb:hover {
+    background: var(--lcd-cyan);
+}
+
+.lastheard-row {
+    display: grid;
+    grid-template-columns: 72px 62px 1fr 46px;
+    gap: 10px;
+    color: #94a3b8;
+    padding: 2px 0;
+    flex-shrink: 0; /* KLUCZOWE: bez tego wiersze się ściskają zamiast wywołać scroll kontenera */
+}
+
+/* najnowszy wpis podświetlony na cyan, tak jak reszta LCD */
+.lastheard-row:first-child {
+    color: var(--lcd-cyan);
+    text-shadow: var(--lcd-text-glow);
+}
+
+.lastheard-row .lh-node { color: var(--lcd-amber); }
+.lastheard-row .lh-call { color: #e2e8f0; font-weight: 700; }
+.lastheard-row .lh-dur  { text-align: right; color: #64748b; }
+
+.lastheard-empty {
+    font-family: var(--font-lcd);
+    font-size: 13px;
+    color: #475569;
+    padding: 6px 0;
+}
+
+/* ---------- Panel: CONNECTED NODES -------------------------------------- */
+.rig-links-deck {
+    padding: 20px 22px;
+    background: #171a23;
+    border-top: 1px solid #2d3342;
+}
+
+.links-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #2d3342;
+}
+
+.links-title {
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    color: #94a3b8;
+    text-shadow: 0 1px 2px #000;
+}
+
+.links-count {
+    font-family: var(--font-lcd);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--lcd-cyan);
+    background: #0c141d;
+    border: 1px solid rgba(0, 229, 255, 0.3);
+    padding: 2px 10px;
+    border-radius: 10px;
+}
+
+.links-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+    max-height: 320px;
+    overflow-y: auto;
+}
+
+/* .link-key rozszerza istniejące .rig-key  */
+.link-key {
+    min-height: 55px;
+}
+
+.link-key.state-transceive {
+    background: linear-gradient(180deg, #1b4d24 0%, #0d2813 100%);
+    border-color: #2e7d32;
+}
+
+.link-key.state-monitor {
+    background: linear-gradient(180deg, #0d3d47 0%, #072a30 100%);
+    border-color: #0e7490;
+}
+
+.link-key.state-connecting {
+    background: linear-gradient(180deg, #6e5b00 0%, #3a2f00 100%);
+    border-color: #b8960a;
+}
+
+.link-key.state-keyed {
+    background: linear-gradient(180deg, #7a0d18 0%, #40060d 100%) !important;
+    border-color: #ff1744 !important;
+    animation: link-keyed-pulse 0.6s infinite alternate;
+}
+
+@keyframes link-keyed-pulse {
+    from { box-shadow: 0 4px 0 #111318, 0 0 8px rgba(255, 23, 68, 0.4); }
+    to   { box-shadow: 0 4px 0 #111318, 0 0 18px rgba(255, 23, 68, 0.9); }
+}
+
+.link-key .key-led.keyed {
+    background: #ff1744;
+    box-shadow: 0 0 10px #ff1744;
+    animation: power-pulse 0.5s infinite alternate;
+}
+
+.links-empty {
+    font-family: var(--font-lcd);
+    font-size: 12px;
+    color: #64748b;
+    padding: 10px 0;
+}
+
+/* pasek szczegółów pod siatką — zastępuje tooltip, działa też na dotyk */
+.link-details-bar {
+    margin-top: 14px;
+    background: #02070a;
+    border: 1px solid var(--lcd-cyan-dim);
+    padding: 8px 12px;
+    border-radius: 3px;
+    font-family: var(--font-lcd);
+    font-size: 12px;
+    color: var(--lcd-cyan);
+    text-shadow: var(--lcd-text-glow);
+    min-height: 20px;
+}
+
+.link-details-bar .ld-label {
+    color: var(--lcd-amber);
+}
+
+/* ---------- Wskaźniki systemowe (CPU/RAM/DISK/TEMP) w header-bar LCD --- */
+
+.lcd-header-bar {
+    flex-wrap: wrap;
+    row-gap: 4px;
+}
+ 
+.sys-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-variant-numeric: tabular-nums;
+}
+ 
+.sys-chip .sys-val {
+    display: inline-block;
+    min-width: 3ch;   /* mieści "7%".."100%" (i typowe "NN°C") bez zmiany szerokości chipsa */
+    text-align: right;
+}
+ 
+.sys-chip .sys-icon {
+    font-size: 1.3em;
+    line-height: 1;
+    filter: saturate(1.4) brightness(1.15);
+    -webkit-font-smoothing: antialiased;
+}
+ 
+.sys-chip.sys-ok .sys-val {
+    color: var(--lcd-cyan);
+}
+ 
+.sys-chip.sys-warn .sys-val {
+    color: #ffb300;
+}
+ 
+.sys-chip.sys-crit .sys-val {
+    color: #ff4444;
+    text-shadow: 0 0 6px rgba(255, 68, 68, 0.6);
+    animation: tx-blink 0.9s infinite alternate;
+}
+ 
+.sys-chip.sys-unknown .sys-val {
+    color: #64748b;
+}
+
+/* ---------- Manual Command: wolny wpis *NNNN / cop NN ------------------ */
+.manual-cmd-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 16px;
+    padding: 12px 14px;
+    background: #12141b;
+    border: 1px solid #2d3342;
+    border-radius: 6px;
+}
+ 
+.manual-cmd-label {
+    font-family: var(--font-lcd);
+    font-size: 12px;
+    color: #94a3b8;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+}
+ 
+.manual-cmd-input {
+    flex: 1;
+    background: #02070a;
+    border: 1px solid var(--lcd-cyan-dim);
+    border-radius: 4px;
+    padding: 8px 10px;
+    font-family: var(--font-lcd);
+    font-size: 13px;
+    color: var(--lcd-cyan);
+    text-shadow: var(--lcd-text-glow);
+    outline: none;
+}
+ 
+.manual-cmd-input::placeholder {
+    color: #475569;
+    text-shadow: none;
+}
+ 
+.manual-cmd-input:focus {
+    border-color: var(--lcd-cyan);
+    box-shadow: 0 0 8px rgba(0, 229, 255, 0.3);
+}
+ 
+.manual-cmd-send {
+    background: linear-gradient(180deg, #164e63 0%, #0c2530 100%);
+    border: 1px solid #0e7490;
+    color: #e2e8f0;
+    font-family: var(--font-lcd);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 8px 18px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+ 
+.manual-cmd-send:hover {
+    background: linear-gradient(180deg, #1a5f78 0%, #0e2e3a 100%);
+}
+ 
+.manual-cmd-send:active {
+    transform: translateY(1px);
+}
+ 
+/* ---------- Komunikat: Function Keys spoza sieci wewnętrznej ----------- */
+/* ---------- S-meter: prawdziwe stany IDLE/RX/TX zamiast statycznego wzoru --------- */
+#smeter-bar .smeter-segment {
+    transition: opacity 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+ 
+/* IDLE: nic się nie dzieje - zgaszone prawie całkiem */
+#smeter-bar.smeter-idle .smeter-segment {
+    opacity: 0.12;
+    box-shadow: none;
+}
+ 
+/* RX: lokalne COS aktywne (realny odbiór z radia) - pełna jasność oryginalnego wzoru */
+#smeter-bar.smeter-rx .smeter-segment {
+    opacity: 1;
+}
+ 
+/* TX: repeater faktycznie nadaje (PTT) - pełna czerwień na wszystkich segmentach,
+   konwencja "power meter" zamiast wzoru S-metera z odbioru */
+#smeter-bar.smeter-tx .smeter-segment {
+    background: #ff1744;
+    opacity: 1;
+    box-shadow: 0 0 8px rgba(255, 23, 68, 0.7);
+}
+/* ---------- Komunikat: Function Keys spoza sieci wewnętrznej ----------- */
+.keypad-restricted {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 32px 20px;
+    background: #12141b;
+    border: 1px dashed #3a4152;
+    border-radius: 6px;
+    color: #64748b;
+    font-family: var(--font-lcd);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-align: center;
+}
+
+.keypad-restricted .restricted-icon {
+    font-size: 16px;
+    filter: grayscale(1) opacity(0.8);
+}
+.rpt-offline-banner {
+    display: none;
+    background: rgba(255, 23, 68, 0.15);
+    border-bottom: 1px solid #ff1744;
+    color: #ff1744;
+    text-shadow: 0 0 8px #ff1744;
+    font-family: var(--font-lcd);
+    font-size: 11px;
+    font-weight: 800;
+    padding: 6px 10px;
+    text-align: center;
+    letter-spacing: 0.08em;
+}
+
+.rpt-offline-banner.show {
+    display: block;
+    animation: tx-blink 0.8s infinite alternate;
+}
+
+@media (max-width: 768px) {
+    .links-grid {
+        grid-template-columns: 1fr;
+        max-height: none;
+    }
+
+    .lastheard-row {
+        grid-template-columns: 48px 50px 1fr 32px;
+        font-size: 10px;
+    }
+}
+
+.lastheard-rows {
+    overflow-x: hidden;
+}
+
+.lastheard-row {
+    overflow: hidden;
+}
+
+.lastheard-row .lh-time,
+.lastheard-row .lh-node,
+.lastheard-row .lh-dur {
+    white-space: nowrap;
+}
+
+.lastheard-row .lh-call {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@media (min-width: 1280px) {
+    .rig-wrapper {
+        max-width: 990px;
+    }
+
+    /* Last Heard dostaje więcej miejsca kosztem głównego LCD (1fr się skurczy) */
+    .rig-upper-deck {
+        grid-template-columns: 1fr 350px;
+        align-items: stretch;
+    }
+
+    .lcd-callsign {
+        font-size: 42px;
+    }
+
+    .links-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    }
+}
