@@ -76,6 +76,14 @@ function sys_mem_pct(): ?float {
 
 /** Procent zajętości dysku dla podanej ścieżki (domyślnie root filesystem). */
 function sys_disk_pct(string $path = '/'): ?float {
+    // Tryb read-only (overlay) na Raspberry Pi: '/' to wtedy tmpfs overlay
+    // (zwykle mały, w RAM), a NIE prawdziwa karta SD. Rzeczywisty rozmiar
+    // widać pod /media/root-ro, które raspi-config montuje jako dostęp
+    // do prawdziwej partycji. Bez tego procent liczyłby się z tmpfs, nie z SD.
+    if ($path === '/' && is_dir('/media/root-ro')) {
+        $path = '/media/root-ro';
+    }
+
     $free  = @disk_free_space($path);
     $total = @disk_total_space($path);
     if ($free === false || $total === false || $total <= 0) {
@@ -83,9 +91,8 @@ function sys_disk_pct(string $path = '/'): ?float {
     }
 
     $usedPct = (1 - $free / $total) * 100;
-    return max(0, min(100, (int)round($usedPct)));
+    return max(0, min(100, (int) round($usedPct)));
 }
-
 /**
  * Temperatura CPU w °C.
  * Główne źródło: /sys/class/thermal/thermal_zone0/temp (world-readable
