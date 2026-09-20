@@ -103,9 +103,9 @@ $isInternalClient = is_internal_client(load_allowed_networks($config));
                             <div class="lcd-flags-bar">
                                 <div class="lcd-flag flag-rx active" id="flag-rx">● RX</div>
                                 <div class="lcd-flag flag-tx" id="flag-tx">● TX</div>
-                                <div class="lcd-flag flag-sql active">SQL</div>
+                                <!-- <div class="lcd-flag flag-sql">SQL</div> -->
                                 <div class="lcd-flag flag-link active" id="flag-link">NET-LINK</div>
-                                <div class="lcd-flag flag-asl">ASL3</div>
+                                <div class="lcd-flag flag-asl active">ASL3</div>
                             </div>
 
                             <!-- Dynamic LCD Status Line -->
