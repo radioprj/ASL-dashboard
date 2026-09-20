@@ -39,7 +39,7 @@ function rpt_lstats($node) {
         }
 
         $fields = preg_split('/\s+/', $line);
-        if (count($fields) >= 6 && ctype_digit($fields[0])) {
+        if (count($fields) >= 6 && preg_match('/^[A-Za-z0-9_.\-]+$/', $fields[0])) {
             $rows[$fields[0]] = [
                 'node'       => $fields[0],
                 'ip'         => $fields[1],
@@ -93,7 +93,7 @@ function rpt_xnode_vars($node) {
             if ($p === '') {
                 continue;
             }
-            if (preg_match('/^(\d+)([TRC])([KU])$/', $p, $m)) {
+            if (preg_match('/^(.+)([TRC])([KU])$/', $p, $m)) {
                 $result['mode'][$m[1]]  = $m[2];
                 $result['keyed'][$m[1]] = ($m[3] === 'K');
             }

@@ -530,7 +530,7 @@ function renderLinks(links) {
                                 <span class="key-ch">[L${String(i + 1).padStart(2, '0')}]</span>
                                 <span class="key-code">${escapeHtml(link.dir)}</span>
                             </div>
-                            <div class="key-label">${escapeHtml(link.node)}${link.callsign ? ' &middot; ' + escapeHtml(link.callsign) : ''}</div>
+                          <div class="key-label">${escapeHtml(link.node)}${(link.callsign && link.callsign !== link.node) ? ' &middot; ' + escapeHtml(link.callsign) : ''}</div>
                         </div>
                     `;
                     el.addEventListener('mouseenter', () => showLinkDetails(link));

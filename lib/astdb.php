@@ -79,6 +79,13 @@ function astdb_lookup($node, $astdb) {
     }
 
     // Heurystyka numeracji: EchoLink to zwykle 3xxxxxx, IRLP to 4xxxxx.
+    // Identyfikator nienumeryczny = najpewniej połączenie telefoniczne/IAX
+    // (np. z aplikacji QSO One), gdzie zamiast numeru noda widnieje znak wywoławczy.
+    if (!ctype_digit((string) $node)) {
+        return ['callsign' => (string) $node, 'desc' => 'Phone/IAX connection', 'loc' => ''];
+    }
+
+    // Heurystyka numeracji: EchoLink to zwykle 3xxxxxx, IRLP to 4xxxxx.
     if (preg_match('/^3\d{6}$/', $node)) {
         return ['callsign' => 'EchoLink', 'desc' => '', 'loc' => ''];
     }
