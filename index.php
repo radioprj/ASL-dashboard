@@ -19,7 +19,7 @@ $isInternalClient = is_internal_client(load_allowed_networks($config));
         <title><?php echo htmlspecialchars($nodeTitle); ?> | Transceiver Node <?php echo htmlspecialchars($nodeNumber); ?></title>
         <meta name="description" content="<?php echo htmlspecialchars($nodeTitle); ?> - AllStarLink Ham Radio Control Panel">
         <meta name="robots" content="noindex, nofollow">
-        <meta name="author" content="M0NFI, G7RPG, G4IYT">
+        <meta name="author" content="M0NFI, G7RPG, G4IYT, SP2ONG">
         <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
         <link rel="icon" href="favicon.ico" type="image/x-icon">
         <link rel="stylesheet" href="css/dashboard-live.css">
