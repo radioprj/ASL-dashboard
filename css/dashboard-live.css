@@ -648,6 +648,17 @@ body {
     outline: 2px solid #00e5ff;
 }
 
+.link-buttons-row {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.link-buttons-row .rig-key-socket {
+    flex: 0 1 160px;
+}
+
 /* Key LED Status Lamp */
 .key-led {
     width: 8px;
@@ -769,42 +780,6 @@ body {
 .toast-success .toast-icon { color: #00e676; }
 .toast-error .toast-icon { color: #ff1744; }
 
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-    .rig-upper-deck {
-        grid-template-columns: 1fr;
-        gap: 16px;
-    }
-
-    .rig-vfo-deck {
-        flex-direction: row;
-        justify-content: space-around;
-        padding: 12px;
-    }
-
-    .vfo-dial-bezel {
-        width: 80px;
-        height: 80px;
-    }
-
-    .vfo-inner-disc {
-        width: 44px;
-        height: 44px;
-    }
-
-    .lcd-callsign {
-        font-size: 32px;
-    }
-
-    .buttons-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .model-desc {
-        display: none;
-    }
-}
-
 
 .btn-lightblue {
     background: linear-gradient(180deg, #8ed8ff 0%, #55bff4 52%, #35a8e0 100%);
@@ -814,34 +789,6 @@ body {
 .led-lightblue {
     background: #9de2ff;
     box-shadow: 0 0 10px #9de2ff;
-}
-.paypal-donate-socket {
-    grid-column: span 2;
-}
-.paypal-donate-key {
-    min-height: 86px;
-    justify-content: center;
-    text-align: center;
-    border-width: 2px;
-    box-shadow: 0 4px 0 #176c96, 0 7px 16px rgba(0,0,0,.55), 0 0 18px rgba(142,216,255,.22);
-}
-.paypal-donate-key .key-inner {
-    align-items: center;
-}
-.paypal-donate-key .key-meta {
-    width: 100%;
-}
-.paypal-donate-key .key-label {
-    font-size: 24px;
-    line-height: 1.1;
-    font-weight: 900;
-    letter-spacing: .045em;
-    color: #06283a;
-    text-shadow: 0 1px 0 rgba(255,255,255,.45);
-}
-.paypal-donate-key .key-ch,
-.paypal-donate-key .key-ext {
-    color: #0a4865;
 }
 @media (max-width: 768px) {
     .paypal-donate-socket { grid-column: span 1; }
@@ -1002,6 +949,11 @@ body {
     text-shadow: 0 1px 2px #000;
 }
 
+.links-badges {
+    display: flex;
+    gap: 8px;
+}
+
 .links-count {
     font-family: var(--font-lcd);
     font-size: 12px;
@@ -1011,6 +963,13 @@ body {
     border: 1px solid rgba(0, 229, 255, 0.3);
     padding: 2px 10px;
     border-radius: 10px;
+}
+
+.links-count.links-onair.active {
+    color: #ff4444;
+    border-color: rgba(255, 68, 68, 0.5);
+    background: rgba(255, 23, 68, 0.1);
+    animation: tx-blink 0.9s infinite alternate;
 }
 
 .links-grid {
@@ -1289,12 +1248,13 @@ body {
     text-overflow: ellipsis;
 }
 
+
+/* Responsive Adjustments */
 @media (min-width: 1280px) {
     .rig-wrapper {
         max-width: 990px;
     }
 
-    /* Last Heard dostaje więcej miejsca kosztem głównego LCD (1fr się skurczy) */
     .rig-upper-deck {
         grid-template-columns: 1fr 350px;
         align-items: stretch;
@@ -1303,8 +1263,57 @@ body {
     .lcd-callsign {
         font-size: 42px;
     }
-
-    .links-grid {
+    .buttons-grid {
+       display: grid;
         grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 12px;
+    }
+   .link-buttons-row {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+   }
+   .link-buttons-row .rig-key-socket {
+    flex: 0 1 160px;
+   }
+    .links-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     }
 }
+
+@media (max-width: 768px) {
+    .rig-upper-deck {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .rig-vfo-deck {
+        flex-direction: row;
+        justify-content: space-around;
+        padding: 12px;
+    }
+
+    .vfo-dial-bezel {
+        width: 80px;
+        height: 80px;
+    }
+
+    .vfo-inner-disc {
+        width: 44px;
+        height: 44px;
+    }
+
+    .lcd-callsign {
+        font-size: 32px;
+    }
+
+    .buttons-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .model-desc {
+        display: none;
+    }
+}
+
