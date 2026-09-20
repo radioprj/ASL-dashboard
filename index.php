@@ -200,9 +200,9 @@ $isInternalClient = is_internal_client(load_allowed_networks($config));
                             }
                             $chTag = sprintf("M%02d", $channelIndex++);
                         ?>
-                            <div class="rig-key-socket<?php echo $socketClass; ?>">
+                            <div class="rig-key-socket">
                                 <?php if ($hasHref): ?>
-                                    <a href="<?php echo htmlspecialchars($btn['href']); ?>" target="_blank" rel="noopener noreferrer" class="rig-key <?php echo $colorClass; ?> key-link<?php echo $specialClass; ?>" id="<?php echo htmlspecialchars($key); ?>" data-title="<?php echo htmlspecialchars($title); ?>" data-type="LINK" data-ch="<?php echo $chTag; ?>">
+                                    <a href="<?php echo htmlspecialchars($btn['href']); ?>" target="_blank" rel="noopener noreferrer" class="rig-key <?php echo $colorClass; ?> key-link" id="<?php echo htmlspecialchars($key); ?>" data-title="<?php echo htmlspecialchars($title); ?>" data-type="LINK" data-ch="<?php echo $chTag; ?>">
                                         <div class="key-led led-<?php echo htmlspecialchars(isset($btn['color']) ? $btn['color'] : 'blue'); ?>"></div>
                                         <div class="key-inner">
                                             <div class="key-meta">
