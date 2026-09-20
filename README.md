@@ -3,7 +3,7 @@ MOD by SP2ONG
 
 ```
 sudo -s
-# jesli nie ma git zainstaluj go
+# Jeśli nie ma git zainstaluj go
 apt install -y git
 cd /var/www/html
 git clone https://github.com/radioprj/ASL-dashboard.git
@@ -17,9 +17,9 @@ systemctl enable --now asl-dashboard-collector
 systemctl status asl-dashboard-collector
 ```
 
-KONFUGURACJA
+**KONFUGURACJA**
 
-W pliku config.ini są zakresy sieci wewnętrznych z których połączenie z dashboard pokazuje sekcje z makrami.
+W pliku config.ini są zakresy sieci wewnętrznych, z których połączenie z dashboard pokazuje sekcje z makrami.
 Wpisać swój numer noda i znak:
 
 ```
@@ -28,11 +28,18 @@ nano config.ini
 ```
 
 
-Jeśli chcesz możesz zmienić zawartość makr w pliku:
+Jeśli chcesz, możesz zmienić zawartość makr w pliku:
 
 ```
 nano buttons.ini
 ```
 
+**AKTUALIZACJA**
+
+```
+sudo -s
+cd /var/www/html
+git pull origin main
+```
 
 ![ASL Dashboard](https://github.com/radioprj/ASL-Dashboard/blob/main/asl-dashboard.png)
