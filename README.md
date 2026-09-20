@@ -17,13 +17,18 @@ systemctl enable --now asl-dashboard-collector
 systemctl status asl-dashboard-collector
 ```
 
+KONFUGURACJA
+
+W pliku config.ini są zakresy sieci wewnętrznych z których połączenie z dashboard pokazuje sekcje z makrami.
 Wpisać swój numer noda i znak:
 
 ```
 cd /var/www/html/
 nano config.ini
 ```
-Jeśli chcesz możesz zmienić zawartośc makr w pliku:
+
+
+Jeśli chcesz możesz zmienić zawartość makr w pliku:
 
 ```
 nano buttons.ini
