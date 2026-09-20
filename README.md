@@ -14,6 +14,7 @@ mv asl-dashboard-collector.service /etc/systemd/system/
 chown root:root /etc/systemd/system/asl-dashboard-collector.service
 systemctl daemon-reload
 systemctl enable --now asl3-update-astdb.timer
+systemctl start asl3-update-astdb.service 
 systemctl enable --now asl-dashboard-collector
 systemctl status asl-dashboard-collector
 ```
