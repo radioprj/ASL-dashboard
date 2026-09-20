@@ -134,8 +134,42 @@ $isInternalClient = is_internal_client(load_allowed_networks($config));
                     </div>
                 </div>
 
-                <!-- Lower Deck: Keypad & Memory Channels (The Action Buttons) -->
+                <!-- Lower Deck -->
                 <div class="rig-keypad-deck">
+
+                <!-- Buttons for Status, Bubble Map, ASL MON -->
+                    <div class="buttons-grid link-buttons-row">
+                            <div class="rig-key-socket">
+                                    <a href="/aslmon3" target="_blank" rel="noopener noreferrer" class="rig-key btn-blue key-link" style="min-height:30px" id="hrg_dash" data-title="ASL MON" data-type="LINK">
+                                        <div class="key-led led-blue"></div>
+                                        <div class="key-inner">
+                                            <div class="key-label">ASL MON</div>
+                                        </div>
+                                    </a>
+                            </div>
+
+                            <div class="rig-key-socket">
+                                    <a href="https://stats.allstarlink.org/stats/<?php echo $nodeNumber; ?>/networkMap" target="_blank" rel="noopener noreferrer" class="rig-key btn-blue key-link" style="min-height:30px" id="bubble_map" data-title="Bubble Map" data-type="LINK">
+                                        <div class="key-led led-blue"></div>
+                                        <div class="key-inner">
+                                            <div class="key-label">Bubble Map</div>
+                                        </div>
+                                    </a>
+                            </div>
+
+                            <div class="rig-key-socket">
+                                    <a href="https://stats.allstarlink.org/nodeinfo.cgi?node=<?php echo $nodeNumber; ?>" target="_blank" rel="noopener noreferrer" class="rig-key btn-blue key-link" style="min-height:30px" id="allstar_status" data-title="Allstar Status" data-type="LINK">
+                                        <div class="key-led led-blue"></div>
+                                        <div class="key-inner">
+                                            <div class="key-label">Allstar Status</div>
+                                        </div>
+                                    </a>
+                            </div>
+                        </div><p>&nbsp;</p>
+
+
+
+                <!-- Keypad & Memory Channels (The Action Buttons) -->
                     <?php if ($isInternalClient): ?>
                     <div class="keypad-header">
                         <span class="keypad-title">MEMORY CHANNELS & FUNCTION KEYS</span>
@@ -203,9 +237,13 @@ $isInternalClient = is_internal_client(load_allowed_networks($config));
 
                 <!-- Connected Nodes Deck -->
                 <div class="rig-links-deck">
-                    <div class="links-header">
-                        <span class="links-title">CONNECTED NODES</span>
-                        <span class="links-count" id="links-count">0 LINKED</span>
+                  <div class="links-header">
+                   <span class="links-title">CONNECTED NODES</span>
+                   <span class="links-badges">
+                      <span class="links-count links-onair" id="links-onair">0 ON AIR</span>
+                      <span class="links-count" id="links-count">0 LINKED</span>
+                      <span class="links-count" id="links-remote">0 REMOTE LINKS</span>
+                    </span>
                     </div>
                     <div class="links-grid" id="links-grid">
                         <div class="links-empty">NO ACTIVE LINKS</div>
@@ -411,6 +449,8 @@ $isInternalClient = is_internal_client(load_allowed_networks($config));
 
             const linksGrid       = document.getElementById('links-grid');
             const linksCount      = document.getElementById('links-count');
+            const linksOnAir      = document.getElementById('links-onair');
+            const linksRemote     = document.getElementById('links-remote');
             const linkDetailsBar  = document.getElementById('link-details-bar');
             const lastheardRows   = document.getElementById('lastheard-rows');
             const lhCount         = document.getElementById('lh-count');
@@ -459,10 +499,14 @@ $isInternalClient = is_internal_client(load_allowed_networks($config));
                 linkDetailsBar.innerHTML = `<span class="ld-label">&gt;&gt;</span> ${parts.join(' &bull; ')}`;
             }
 
-            function renderLinks(links) {
-                linksCount.textContent = `${links.length} LINKED`;
+function renderLinks(links) {
+    linksCount.textContent = `${links.length} LINKED`;
 
-                if (!links.length) {
+    const onAirCount = links.filter(l => l.keyed).length;
+    linksOnAir.textContent = `${onAirCount} ON AIR`;
+    linksOnAir.classList.toggle('active', onAirCount > 0);
+
+    if (!links.length) {
                     linksGrid.innerHTML = '<div class="links-empty">NO ACTIVE LINKS</div>';
                     linkDetailsBar.innerHTML = '<span class="ld-label">&gt;&gt;</span> Hover or tap a node to see details';
                     return;
@@ -590,6 +634,7 @@ if (data.ptt) {
                     offlineBanner.classList.toggle('show', data.rpt_ok === false);
 
                     renderLinks(data.links || []);
+                    linksRemote.textContent = `${data.numlinks || 0} REMOTE LINKS`;
                     renderLastHeard(data.lastheard || []);
                     renderSys(data.sys);
                     updateMainLcdFromStatus(data);

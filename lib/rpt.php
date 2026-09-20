@@ -80,10 +80,10 @@ function rpt_xnode_vars($node) {
         'txkeyed'  => (($vars['RPT_TXKEYED']  ?? '0') === '1'),
         'etxkeyed' => (($vars['RPT_ETXKEYED'] ?? '0') === '1'),
         'rxkeyed'  => (($vars['RPT_RXKEYED']  ?? '0') === '1'),
+        'numlinks' => (int) ($vars['RPT_NUMLINKS'] ?? 0),
         'mode'     => [],  // node => 'T' | 'R' | 'C'
         'keyed'    => [],  // node => bool
     ];
-
     if (!empty($vars['RPT_ALINKS'])) {
         $parts = explode(',', $vars['RPT_ALINKS']);
         array_shift($parts); // odrzuć wiodący licznik

@@ -148,6 +148,7 @@ while ($running) {
         'ptt'       => $vars['txkeyed'],
         'cos'       => $vars['rxkeyed'],
         'links'     => $links,
+        'numlinks'  => $vars['numlinks'],
         'lastheard' => array_reverse($lastheard), // najnowsze pierwsze
         'sys'       => sys_stats_collect(),
         'astdb'     => [

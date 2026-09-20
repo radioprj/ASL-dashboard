@@ -1,4 +1,33 @@
 Base on https://github.com/andrewmacrides-web/M0FXB-HAMTECH-Andreas/tree/main
 MOD by SP2ONG
 
+```
+sudo -s
+# jesli nie ma git zainstaluj go
+apt install -y git
+cd /var/www/html
+git clone https://github.com/radioprj/ASL-dashboard.git
+cd /var/www
+chown -R www-data:www-data html
+cd /var/www/html
+mv asl-dashboard-collector.service /etc/systemd/system/
+chown root:root /etc/systemd/system/asl-dashboard-collector.service
+systemctl daemon-reload
+systemctl enable --now asl-dashboard-collector
+systemctl status asl-dashboard-collector
+```
+
+Wpisać swój numer noda i znak:
+
+```
+cd /var/www/html/
+nano config.ini
+```
+Jeśli chcesz możesz zmienić zawartośc makr w pliku:
+
+```
+nano buttons.ini
+```
+
+
 ![ASL Dashboard](https://github.com/radioprj/ASL-Dashboard/blob/main/asl-dashboard.png)
