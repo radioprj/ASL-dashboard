@@ -26,6 +26,17 @@ echo "www-data ALL=(root) NOPASSWD: /usr/sbin/asterisk" > /etc/sudoers.d/asl-das
 chmod 440 /etc/sudoers.d/asl-dashboard
 visudo -cf /etc/sudoers.d/asl-dashboard >/dev/null
 ```
+Aktywuj w rpt.conf komendę 806 do rozłączania nodów:
+```
+sudo -s
+nano /etc/asterisk/rpt.conf
+# Poszukaj linii
+; 806 = ilink,6
+# usuń znak ; aby wiersz był
+806 = ilink,6
+# zapisz używając klawisz: Ctrl + O, a potem Enter i następnie wciśnij Ctrl + X
+systemctl restart asterisk
+```
 
 **KONFUGURACJA**
 
