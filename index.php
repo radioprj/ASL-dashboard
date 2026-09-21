@@ -41,19 +41,20 @@ $isInternalClient = is_internal_client(load_allowed_networks($config));
                 <div class="rig-top-bar">
                     <div class="hex-screw top-left"></div>
                     <div class="rig-brand">
-                        <span class="brand-name">ASL Dashboard</span>
-                        <span class="model-badge" style="margin-left:15px;margin-right:10px;">ALLSTARLINK DIGITAL TRANSCEIVER</span>
+                        <span class="brand-name" style="margin-left:20px;">ASL Dashboard</span>
+                        <span class="model-badge hide-mobile" style="margin-left:48px;margin-right:0px;">ALLSTARLINK DIGITAL TRANSCEIVER</span>
                     </div>
-                <div class="rig-power-section">
+                <div class="rig-power-section top-right">
                      <button type="button" id="fullscreen-toggle" class="fullscreen-btn" title="Fullscreen" aria-label="Toggle Fullscreen" style="display:none">
                      <span class="fs-icon">&#9974;</span>
                      </button>
-                      <div class="power-indicator">
+                     <div class="power-indicator hide-mobile">
                            <span class="power-led"></span>
                            <span class="power-label">PWR / READY</span>
                           </div>
                      </div>
-                    <div class="hex-screw top-right"></div>
+                    <div class="hex-screw top-right">
+                    </div>
                 </div>
 
                 <!-- Upper Deck: LCD Display + VFO Tuning Dial + Controls -->
@@ -64,7 +65,7 @@ $isInternalClient = is_internal_client(load_allowed_networks($config));
                             <!-- LCD Top Header Bar -->
                             <div class="lcd-header-bar">
                                 <span class="lcd-tag">NODE: <strong><?php echo htmlspecialchars($nodeNumber); ?></strong></span>
-                                <span class="lcd-tag lcd-mem-highlight" id="lcd-mem-tag">VFO-A</span>
+                                <span class="lcd-tag lcd-mem-highlight" id="lcd-mem-tag">&nbsp;VFO-A&nbsp;</span>
                                 <span class="lcd-tag sys-chip sys-unknown" id="sys-ram" title="RAM Usage"><span class="sys-icon">&#129504;</span><span class="sys-val">--%</span></span>
                                 <span class="lcd-tag sys-chip sys-unknown" id="sys-disk" title="Disk Usage"><span class="sys-icon">&#128190;</span><span class="sys-val">--%</span></span>
                                 <span class="lcd-tag sys-chip sys-unknown" id="sys-cpu" title="CPU Load"><span class="sys-icon">&#9881;&#65039;</span><span class="sys-val">--%</span></span>
@@ -231,7 +232,7 @@ $isInternalClient = is_internal_client(load_allowed_networks($config));
                     <div class="manual-cmd-bar">
                         <span class="manual-cmd-label">MANUAL CMD:</span>
                         <input type="text" id="manual-cmd-input" class="manual-cmd-input"
-                               placeholder="*365321 or cop 73" maxlength="24"
+                               placeholder="*365321 or cop 73" maxlength="25"
                                autocomplete="off" spellcheck="false">
                         <button type="button" id="manual-cmd-send" class="manual-cmd-send">SEND</button>
                     </div>
@@ -259,7 +260,7 @@ $isInternalClient = is_internal_client(load_allowed_networks($config));
                 <!-- Bottom Bezel -->
                 <div class="rig-bottom-bar">
                     <div class="hex-screw bottom-left"></div>
-                    <div class="rig-footer-text">Is based on the code <a style="color: yellow;" target=_blank href="https://github.com/andrewmacrides-web/M0FXB-HAMTECH-Andreas/">M0FXB</a> - <span style="color:cyan;">MOD SP2ONG</span> &bull; ALLSTARLINK NODE <?php echo htmlspecialchars($nodeNumber); ?></div>
+                    <div class="rig-footer-text hide-mobile" style="margin-left:15px;"> &bull; Is based on the code <a style="color: yellow;" target=_blank href="https://github.com/andrewmacrides-web/M0FXB-HAMTECH-Andreas/">M0FXB</a> - <span style="color:cyan;">MOD SP2ONG</span> &bull;</div>
                     <div class="hex-screw bottom-right"></div>
                 </div>
             </div>

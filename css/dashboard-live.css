@@ -963,6 +963,7 @@ body {
     border: 1px solid rgba(0, 229, 255, 0.3);
     padding: 2px 10px;
     border-radius: 10px;
+    white-space: nowrap;
 }
 
 .links-count.links-onair.active {
@@ -1118,6 +1119,7 @@ body {
     color: var(--lcd-cyan);
     text-shadow: var(--lcd-text-glow);
     outline: none;
+    min-width:100px;
 }
  
 .manual-cmd-input::placeholder {
@@ -1341,6 +1343,21 @@ body {
         grid-template-columns: 48px 50px 1fr 32px;
         font-size: 10px;
     }
+
+   .hide-mobile {
+    display: none;
+    }
+
+    .links-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    .links-badges {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+}
 
 }
 
