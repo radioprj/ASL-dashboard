@@ -18,6 +18,13 @@ systemctl start asl3-update-astdb.service
 systemctl enable --now asl-dashboard-collector
 systemctl status asl-dashboard-collector
 ```
+Następnie wykonać:
+```
+sudo -s
+echo "www-data ALL=(root) NOPASSWD: /usr/sbin/asterisk" > /etc/sudoers.d/asl-dashboard
+chmod 440 /etc/sudoers.d/asl-dashboard
+visudo -cf /etc/sudoers.d/asl-dashboard >/dev/null
+```
 
 **KONFUGURACJA**
 
