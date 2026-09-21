@@ -3,8 +3,9 @@ MOD by SP2ONG
 
 ```
 sudo -s
-# Jeśli nie ma git zainstaluj go
-apt install -y git
+# Jeśli nie ma git zainstaluj go oraz apache2
+apt-get update --allow-releaseinfo-change
+apt-get install -y apache2 libapache2-mod-php git
 cd /var/www/html
 git clone https://github.com/radioprj/ASL-dashboard.git
 cd /var/www
