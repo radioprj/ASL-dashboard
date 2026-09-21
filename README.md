@@ -3,7 +3,7 @@ MOD by SP2ONG
 
 ```
 sudo -s
-# Jeśli nie ma git zainstaluj go oraz apache2
+# Jeśli nie ma git zainstaluj oraz apache2
 apt-get update --allow-releaseinfo-change
 apt-get install -y apache2 libapache2-mod-php git
 cd /var/www/html
