@@ -1,4 +1,4 @@
-Base on https://github.com/andrewmacrides-web/M0FXB-HAMTECH-Andreas/tree/main
+Is based on the code: https://github.com/andrewmacrides-web/M0FXB-HAMTECH-Andreas/tree/main
 MOD by SP2ONG
 
 ```
