@@ -901,7 +901,7 @@ body {
 
 .lastheard-row {
     display: grid;
-    grid-template-columns: 72px 62px 1fr 46px;
+    grid-template-columns: 40px 50px 1fr 26px;
     gap: 10px;
     color: #94a3b8;
     padding: 2px 0;
@@ -1216,17 +1216,6 @@ body {
     animation: tx-blink 0.8s infinite alternate;
 }
 
-@media (max-width: 768px) {
-    .links-grid {
-        grid-template-columns: 1fr;
-        max-height: none;
-    }
-
-    .lastheard-row {
-        grid-template-columns: 48px 50px 1fr 32px;
-        font-size: 10px;
-    }
-}
 
 .lastheard-rows {
     overflow-x: hidden;
@@ -1249,6 +1238,34 @@ body {
 }
 
 
+.fullscreen-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    margin-right: 10px;
+    background: #12141b;
+    border: 1px solid #2d3342;
+    border-radius: 6px;
+    color: #94a3b8;
+    font-size: 14px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.fullscreen-btn:hover {
+    border-color: var(--lcd-cyan-dim);
+    color: var(--lcd-cyan);
+}
+
+.fullscreen-btn.active {
+    border-color: var(--lcd-cyan);
+    color: var(--lcd-cyan);
+    box-shadow: 0 0 6px rgba(0, 229, 255, 0.4);
+}
+
+
 /* Responsive Adjustments */
 @media (min-width: 1280px) {
     .rig-wrapper {
@@ -1256,7 +1273,7 @@ body {
     }
 
     .rig-upper-deck {
-        grid-template-columns: 1fr 350px;
+        grid-template-columns: 1fr 340px;
         align-items: stretch;
     }
 
@@ -1315,5 +1332,15 @@ body {
     .model-desc {
         display: none;
     }
+    .links-grid {
+        grid-template-columns: 1fr;
+        max-height: none;
+    }
+
+    .lastheard-row {
+        grid-template-columns: 48px 50px 1fr 32px;
+        font-size: 10px;
+    }
+
 }
 

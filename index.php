@@ -42,15 +42,17 @@ $isInternalClient = is_internal_client(load_allowed_networks($config));
                     <div class="hex-screw top-left"></div>
                     <div class="rig-brand">
                         <span class="brand-name">ASL Dashboard</span>
-                        <span class="model-badge">DSP-<?php echo htmlspecialchars($nodeNumber); ?> PRO</span>
-                        <span class="model-desc">ALLSTARLINK DIGITAL TRANSCEIVER</span>
+                        <span class="model-badge" style="margin-left:15px;margin-right:10px;">ALLSTARLINK DIGITAL TRANSCEIVER</span>
                     </div>
-                    <div class="rig-power-section">
-                        <div class="power-indicator">
-                            <span class="power-led"></span>
-                            <span class="power-label">PWR / READY</span>
-                        </div>
-                    </div>
+                <div class="rig-power-section">
+                     <button type="button" id="fullscreen-toggle" class="fullscreen-btn" title="Fullscreen" aria-label="Toggle Fullscreen" style="display:none">
+                     <span class="fs-icon">&#9974;</span>
+                     </button>
+                      <div class="power-indicator">
+                           <span class="power-led"></span>
+                           <span class="power-label">PWR / READY</span>
+                          </div>
+                     </div>
                     <div class="hex-screw top-right"></div>
                 </div>
 
@@ -62,11 +64,6 @@ $isInternalClient = is_internal_client(load_allowed_networks($config));
                             <!-- LCD Top Header Bar -->
                             <div class="lcd-header-bar">
                                 <span class="lcd-tag">NODE: <strong><?php echo htmlspecialchars($nodeNumber); ?></strong></span>
-                                <?php if ($isInternalClient): ?>
-                                   <span class="lcd-tag">IP: <strong><?php echo htmlspecialchars($nodeIp); ?></strong></span>
-                                <?php else: ?>
-                                   <span class="lcd-tag">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                                <?php endif ?>
                                 <span class="lcd-tag lcd-mem-highlight" id="lcd-mem-tag">VFO-A</span>
                                 <span class="lcd-tag sys-chip sys-unknown" id="sys-ram" title="RAM Usage"><span class="sys-icon">&#129504;</span><span class="sys-val">--%</span></span>
                                 <span class="lcd-tag sys-chip sys-unknown" id="sys-disk" title="Disk Usage"><span class="sys-icon">&#128190;</span><span class="sys-val">--%</span></span>
@@ -122,9 +119,9 @@ $isInternalClient = is_internal_client(load_allowed_networks($config));
                         </div>
                     </div>
 
-                    <!-- Right Side: Last Heard Display & Rotary Knobs -->
+                    <!-- Right Side: Last Heard Display  -->
                     <div class="rig-vfo-deck">
-                        <!-- Secondary LCD: Last Heard (replaces the decorative VFO dial) -->
+                        <!-- Secondary LCD: Last Heard  -->
                         <div class="lastheard-screen-housing">
                             <div class="lastheard-lcd" id="lastheard-lcd">
                                 <div class="lastheard-header">
@@ -178,7 +175,7 @@ $isInternalClient = is_internal_client(load_allowed_networks($config));
                 <!-- Keypad & Memory Channels (The Action Buttons) -->
                     <?php if ($isInternalClient): ?>
                     <div class="keypad-header">
-                        <span class="keypad-title">MEMORY CHANNELS & FUNCTION KEYS</span>
+                        <span class="keypad-title">MEMORY CHANNELS</span>
                         <div class="speaker-grille">
                             <span></span><span></span><span></span><span></span><span></span>
                             <span></span><span></span><span></span><span></span><span></span>
@@ -476,7 +473,7 @@ $isInternalClient = is_internal_client(load_allowed_networks($config));
 
             function fmtClock(unixTs) {
                 return new Date(unixTs * 1000).toLocaleTimeString([], {
-                    hour: '2-digit', minute: '2-digit', second: '2-digit'
+                    hour: '2-digit', minute: '2-digit'
                 });
             }
 
@@ -505,7 +502,7 @@ $isInternalClient = is_internal_client(load_allowed_networks($config));
                 linkDetailsBar.innerHTML = `<span class="ld-label">&gt;&gt;</span> ${parts.join(' &bull; ')}`;
             }
 
-function renderLinks(links) {
+    function renderLinks(links) {
     linksCount.textContent = `${links.length} LINKED`;
 
     const onAirCount = links.filter(l => l.keyed).length;
@@ -566,17 +563,17 @@ function renderLinks(links) {
             function updateMainLcdFromStatus(data) {
                 if (Date.now() < manualFlashUntil) return;
 
-flagRx.classList.toggle('active', !!data.cos);
-flagTx.classList.toggle('active', !!data.ptt);
+                flagRx.classList.toggle('active', !!data.cos);
+                flagTx.classList.toggle('active', !!data.ptt);
 
-smeterBar.classList.remove('smeter-idle', 'smeter-rx', 'smeter-tx');
-if (data.ptt) {
-    smeterBar.classList.add('smeter-tx');
-} else if (data.cos) {
-    smeterBar.classList.add('smeter-rx');
-} else {
-    smeterBar.classList.add('smeter-idle');
-}
+                smeterBar.classList.remove('smeter-idle', 'smeter-rx', 'smeter-tx');
+                if (data.ptt) {
+                   smeterBar.classList.add('smeter-tx');
+                } else if (data.cos) {
+                   smeterBar.classList.add('smeter-rx');
+                } else {
+                   smeterBar.classList.add('smeter-idle');
+                }
 
 
                 if (data.links && data.links.length) {
@@ -651,6 +648,39 @@ if (data.ptt) {
 
             pollStatus();
             setInterval(pollStatus, POLL_MS);
+
+            const fsBtn = document.getElementById('fullscreen-toggle');
+
+            function fsElement() {
+                    return document.fullscreenElement || document.webkitFullscreenElement || null;
+}
+
+            function fsSupported() {
+                  return !!(document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen);
+            }
+
+            function updateFsButton() {
+               if (!fsBtn) return;
+                  const active = !!fsElement();
+                  fsBtn.classList.toggle('active', active);
+                  fsBtn.title = active ? 'Exit Fullscreen' : 'Fullscreen';
+                  fsBtn.setAttribute('aria-pressed', active ? 'true' : 'false');
+             }
+
+                 if (fsBtn && fsSupported()) {
+                 fsBtn.style.display = '';
+                 fsBtn.addEventListener('click', () => {
+                 if (fsElement()) {
+                    (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+                 } else {
+                     const el = document.documentElement;
+                     (el.requestFullscreen || el.webkitRequestFullscreen).call(el);
+                   }
+                  });
+                document.addEventListener('fullscreenchange', updateFsButton);
+                   document.addEventListener('webkitfullscreenchange', updateFsButton);
+                 }
+
         </script>
     </body>
 </html>
