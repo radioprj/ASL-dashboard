@@ -19,7 +19,7 @@ systemctl start asl3-update-astdb.service
 systemctl enable --now asl-dashboard-collector
 systemctl status asl-dashboard-collector
 ```
-Następnie wykonać:
+Następnie ustawić uprawnienia www-data do wykonania poleceń w Asterisk:
 ```
 sudo -s
 echo "www-data ALL=(root) NOPASSWD: /usr/sbin/asterisk" > /etc/sudoers.d/asl-dashboard
