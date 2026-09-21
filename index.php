@@ -262,7 +262,7 @@ $isInternalClient = is_internal_client(load_allowed_networks($config));
                 <!-- Bottom Bezel -->
                 <div class="rig-bottom-bar">
                     <div class="hex-screw bottom-left"></div>
-                    <div class="rig-footer-text">BASE ON CODE <a style="color: yellow;" target=_blank href="https://github.com/andrewmacrides-web/M0FXB-HAMTECH-Andreas/">M0FXB</a> - <span style="color:cyan;">MOD SP2ONG</span> &bull; ALLSTARLINK NODE <?php echo htmlspecialchars($nodeNumber); ?></div>
+                    <div class="rig-footer-text">Is based on the code <a style="color: yellow;" target=_blank href="https://github.com/andrewmacrides-web/M0FXB-HAMTECH-Andreas/">M0FXB</a> - <span style="color:cyan;">MOD SP2ONG</span> &bull; ALLSTARLINK NODE <?php echo htmlspecialchars($nodeNumber); ?></div>
                     <div class="hex-screw bottom-right"></div>
                 </div>
             </div>
