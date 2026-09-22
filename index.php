@@ -279,34 +279,6 @@ $isInternalClient = is_internal_client(load_allowed_networks($config));
             const smeterSegments = document.querySelectorAll('.smeter-segment');
             const smeterBar = document.getElementById('smeter-bar');
 
-            // Interactive VFO Dial Rotation
-            function rotateVfo(delta) {
-                currentVfoAngle = (currentVfoAngle + delta) % 360;
-                vfoDial.style.transform = `rotate(${currentVfoAngle}deg)`;
-            }
-
-            if (vfoDial) {
-                vfoDial.addEventListener('wheel', (e) => {
-                    e.preventDefault();
-                    rotateVfo(e.deltaY > 0 ? 15 : -15);
-                });
-
-                let isDragging = false;
-                let startX = 0;
-                vfoDial.addEventListener('mousedown', (e) => {
-                    isDragging = true;
-                    startX = e.clientX;
-                });
-                window.addEventListener('mousemove', (e) => {
-                    if (isDragging) {
-                        const delta = (e.clientX - startX) * 2;
-                        rotateVfo(delta);
-                        startX = e.clientX;
-                    }
-                });
-                window.addEventListener('mouseup', () => { isDragging = false; });
-            }
-
             function showToast(message, type = 'info') {
                 const container = document.getElementById('toast-container');
                 const toast = document.createElement('div');
@@ -336,7 +308,7 @@ $isInternalClient = is_internal_client(load_allowed_networks($config));
                 lcdMarquee.style.color = '#ff4444';
 
                 // Update Main Display Readouts
-                if (cmd === 'disconnect_all' || code === '*73') {
+                if (cmd === 'disconnect_all' || code === '*73' || code === '*610' || code === '*620') {
                     lcdMemTag && (lcdMemTag.innerText = 'STANDBY');
                     lcdActiveTitle.innerText = 'DISCONNECTED';
                     lcdActiveTitle.style.color = '#ff4444';
