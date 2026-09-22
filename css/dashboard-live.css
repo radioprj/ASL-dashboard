@@ -1360,6 +1360,9 @@ footer .source-link {
         flex-wrap: wrap;
     }
 
+   .hide-mobile {
+    display: none;
+    }
    .sys-chip .sys-icon {
     font-size: 0.8em;
     line-height: 0.8;
