@@ -1268,6 +1268,11 @@ body {
 }
 
 
+footer .source-link {
+    font-size: 11px;
+    white-space: nowrap;
+    opacity: 0.7; /* Subtelny wygląd, który nie rzuca się w oczy */
+}
 /* Responsive Adjustments */
 @media (min-width: 1280px) {
     .rig-wrapper {
@@ -1298,10 +1303,6 @@ body {
    }
     .links-grid {
         grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    }
-
-   .hide-width {
-    display: none;
     }
 
 }
@@ -1347,10 +1348,6 @@ body {
     .lastheard-row {
         grid-template-columns: 48px 50px 1fr 32px;
         font-size: 10px;
-    }
-
-   .hide-mobile {
-    display: none;
     }
 
     .links-header {
