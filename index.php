@@ -121,7 +121,7 @@ $isInternalClient = is_internal_client(load_allowed_networks($config));
                     </div>
 
                     <!-- Right Side: Last Heard Display  -->
-                    <div class="rig-vfo-deck">
+                    <!-- <div class="rig-vfo-deck"> -->
                         <!-- Secondary LCD: Last Heard  -->
                         <div class="lastheard-screen-housing">
                             <div class="lastheard-lcd" id="lastheard-lcd">
@@ -134,8 +134,7 @@ $isInternalClient = is_internal_client(load_allowed_networks($config));
                                 </div>
                             </div>
                         </div>
-
-                    </div>
+                       <!-- </div> -->
                 </div>
 
                 <!-- Lower Deck -->
