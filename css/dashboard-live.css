@@ -1062,7 +1062,7 @@ body {
     min-width: 3ch;   /* mieści "7%".."100%" (i typowe "NN°C") bez zmiany szerokości chipsa */
     text-align: right;
 }
- 
+
 .sys-chip .sys-icon {
     font-size: 1.3em;
     line-height: 1;
@@ -1299,6 +1299,11 @@ body {
     .links-grid {
         grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     }
+
+   .hide-width {
+    display: none;
+    }
+
 }
 
 @media (max-width: 768px) {
@@ -1357,7 +1362,11 @@ body {
         width: 100%;
         flex-wrap: wrap;
     }
-}
+
+   .sys-chip .sys-icon {
+    font-size: 0.8em;
+    line-height: 0.8;
+    }
 
 }
 

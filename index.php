@@ -261,6 +261,7 @@ $isInternalClient = is_internal_client(load_allowed_networks($config));
                 <div class="rig-bottom-bar">
                     <div class="hex-screw bottom-left"></div>
                     <div class="rig-footer-text hide-mobile" style="margin-left:15px;"> &bull; Is based on the code <a style="color: yellow;" target=_blank href="https://github.com/andrewmacrides-web/M0FXB-HAMTECH-Andreas/">M0FXB</a> - <span style="color:cyan;">MOD SP2ONG</span> &bull;</div>
+                    <div class="rig-footer-text hide-width" style="margin-left:15px;"> &bull; <a style="color: yellow;" target=_blank href="https://github.com/andrewmacrides-web/M0FXB-HAMTECH-Andreas/">M0FXB</a> - <span style="color:cyan;">MOD SP2ONG</span> &bull;</div>
                     <div class="hex-screw bottom-right"></div>
                 </div>
             </div>
