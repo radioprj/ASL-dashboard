@@ -41,8 +41,8 @@ $isInternalClient = is_internal_client(load_allowed_networks($config));
                 <div class="rig-top-bar">
                     <div class="hex-screw top-left"></div>
                     <div class="rig-brand">
-                        <span class="brand-name" style="margin-left:20px;">ASL Dashboard</span>
-                        <span class="model-badge hide-mobile" style="margin-left:48px;margin-right:0px;">ALLSTARLINK DIGITAL TRANSCEIVER</span>
+                        <span class="brand-name">ASL Dashboard</span>
+                        <span class="model-badge hide-mobile" style="margin-left:40px;margin-right:0px;">ALLSTARLINK DIGITAL TRANSCEIVER</span>
                     </div>
                 <div class="rig-power-section top-right">
                      <button type="button" id="fullscreen-toggle" class="fullscreen-btn" title="Fullscreen" aria-label="Toggle Fullscreen" style="display:none">
