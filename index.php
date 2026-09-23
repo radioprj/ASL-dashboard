@@ -143,7 +143,7 @@ $isInternalClient = is_internal_client(load_allowed_networks($config));
                 <!-- Buttons for Status, Bubble Map, ASL MON -->
                     <div class="buttons-grid link-buttons-row">
                             <div class="rig-key-socket">
-                                    <a href="/aslmon3" target="_blank" rel="noopener noreferrer" class="rig-key btn-blue key-link" style="min-height:30px" id="hrg_dash" data-title="ASL MON" data-type="LINK">
+                                    <a href="/allmon3" target="_blank" rel="noopener noreferrer" class="rig-key btn-blue key-link" style="min-height:30px" id="hrg_dash" data-title="ASL MON" data-type="LINK">
                                         <div class="key-led led-blue"></div>
                                         <div class="key-inner">
                                             <div class="key-label">ASL MON</div>
