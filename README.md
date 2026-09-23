@@ -10,8 +10,7 @@ systemctl restart apache2
 cd /tmp
 git clone https://github.com/radioprj/ASL-dashboard.git
 cd ASL-dashboard
-cp -r * /var/www/html/
-cp -r .* /var/www/html/
+rsync -av --exclude='.git*' ./ /var/www/html/
 cd /var/www
 chown -R www-data:www-data html
 cd /var/www/html
@@ -63,8 +62,10 @@ nano buttons.ini
 
 ```
 sudo -s
-cd /var/www/html
-git pull origin main
+cd /tmp
+git clone https://github.com/radioprj/ASL-dashboard.git
+cd ASL-dashboard
+rsync -av --exclude='.git*' --exclude='config.ini' --exclude='buttons.ini' ./ /var/www/html/
 ```
 
 ![ASL Dashboard](https://github.com/radioprj/ASL-Dashboard/blob/main/asl-dashboard.png)
