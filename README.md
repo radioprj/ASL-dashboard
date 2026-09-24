@@ -74,7 +74,8 @@ Podmień `192.168.1.0/24` na realny zakres swojej sieci lokalnej.
 
 Możesz słuchać audio z noda ASL który udostępnia swój audio stream, lub np z swojego lokalnego noda.
 Wpisz tylko jeden url i jego opis. np adres audio stream HUBNet :
-```
+
+```ini
 [audio]
 stream_url = "https://g7rpg.hubnetwork.uk/stream"
 description = "HUBNet UK"
