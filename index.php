@@ -3,7 +3,8 @@
 $config = parse_ini_file('config.ini', true);
 $nodeNumber = isset($config['node']['number']) ? $config['node']['number'] : '123456';
 $nodeTitle = isset($config['node']['callsign']) ? $config['node']['callsign'] : 'N0CALL';
-$nodeIp = isset($_SERVER['SERVER_ADDR']) && $_SERVER['SERVER_ADDR'] !== '' ? $_SERVER['SERVER_ADDR'] : gethostbyname(gethostname());
+$audioUrl = isset($config['audio']['stream_url']) ? trim($config['audio']['stream_url']) : '';
+$audioDesc = isset($config['audio']['description']) ? trim($config['audio']['description']) : '';
 
 $buttons = parse_ini_file('buttons.ini', true);
 
@@ -141,7 +142,28 @@ $isInternalClient = is_internal_client(load_allowed_networks($config));
                 <div class="rig-keypad-deck">
 
                 <!-- Buttons for Status, Bubble Map, ASL MON -->
+
+                    <?php if ($audioUrl !== ''): ?>
+                        <div class="live-audio-bar">
+                          <audio id="node-audio" preload="none">
+                          <source src="<?php echo htmlspecialchars($audioUrl); ?>">
+                          </audio>
+                          <button type="button" id="audio-toggle" class="audio-toggle-btn" aria-label="Play live audio">
+                          <span class="audio-icon">&#9654;</span>
+                          </button>
+                          <div class="audio-info">
+                          <span class="audio-live-dot" id="audio-live-dot"></span>
+                          <span class="audio-status" id="audio-status" data-desc="<?php echo htmlspecialchars($audioDesc); ?>">NODE AUDIO STREAM</span>
+                          </div>
+                          <div class="audio-volume">
+                              <span class="audio-vol-icon">&#128266;</span>
+                              <input type="range" id="audio-volume" min="0" max="100" value="80" class="audio-volume-slider">
+                           </div>
+                       </div>
+                    <?php endif; ?>
+
                     <div class="buttons-grid link-buttons-row">
+
                             <div class="rig-key-socket">
                                     <a href="/allmon3" target="_blank" rel="noopener noreferrer" class="rig-key btn-blue key-link" style="min-height:30px" id="hrg_dash" data-title="ASL MON" data-type="LINK">
                                         <div class="key-led led-blue"></div>
@@ -474,14 +496,13 @@ $isInternalClient = is_internal_client(load_allowed_networks($config));
                 linkDetailsBar.innerHTML = `<span class="ld-label">&gt;&gt;</span> ${parts.join(' &bull; ')}`;
             }
 
-    function renderLinks(links) {
-    linksCount.textContent = `${links.length} LINKED`;
+           function renderLinks(links) {
+                linksCount.textContent = `${links.length} LINKED`;
+                const onAirCount = links.filter(l => l.keyed).length;
+                linksOnAir.textContent = `${onAirCount} ON AIR`;
+                linksOnAir.classList.toggle('active', onAirCount > 0);
 
-    const onAirCount = links.filter(l => l.keyed).length;
-    linksOnAir.textContent = `${onAirCount} ON AIR`;
-    linksOnAir.classList.toggle('active', onAirCount > 0);
-
-    if (!links.length) {
+            if (!links.length) {
                     linksGrid.innerHTML = '<div class="links-empty">NO ACTIVE LINKS</div>';
                     linkDetailsBar.innerHTML = '<span class="ld-label">&gt;&gt;</span> Hover or tap a node to see details';
                     return;
@@ -651,6 +672,67 @@ $isInternalClient = is_internal_client(load_allowed_networks($config));
                   });
                 document.addEventListener('fullscreenchange', updateFsButton);
                    document.addEventListener('webkitfullscreenchange', updateFsButton);
+                 }
+
+                const audioEl        = document.getElementById('node-audio');
+                const audioToggleBtn = document.getElementById('audio-toggle');
+                const audioLiveDot   = document.getElementById('audio-live-dot');
+                const audioStatus    = document.getElementById('audio-status');
+                const audioVolume    = document.getElementById('audio-volume');
+                const audioDesc      = audioStatus ? audioStatus.dataset.desc : '';
+
+                function withDesc(label) {
+                    return audioDesc ? `${label} - ${audioDesc}` : label;
+                }
+
+                if (audioEl && audioToggleBtn) {
+                    const streamSrc = audioEl.querySelector('source').src;
+                    audioEl.volume = audioVolume.value / 100;
+
+                function setAudioState(state) {
+                  audioToggleBtn.classList.remove('playing', 'connecting', 'error');
+                  audioLiveDot.classList.remove('active');
+
+                  if (state === 'playing') {
+                     audioToggleBtn.innerHTML = '<span class="audio-icon">&#9632;</span>';
+                     audioToggleBtn.classList.add('playing');
+                     audioLiveDot.classList.add('active');
+                     audioStatus.textContent = withDesc('LIVE');
+                  } else if (state === 'connecting') {
+                     audioToggleBtn.classList.add('connecting');
+                     audioStatus.textContent = withDesc('CONNECTING…');
+                  } else if (state === 'error') {
+                     audioToggleBtn.classList.add('error');
+                     audioStatus.textContent = withDesc('STREAM ERROR');
+                  } else {
+                     audioToggleBtn.innerHTML = '<span class="audio-icon">&#9654;</span>';
+                     audioStatus.textContent = withDesc('NODE AUDIO STREAM');
+                  }
+                }
+
+                  audioToggleBtn.addEventListener('click', () => {
+                  if (audioEl.paused) {
+                     setAudioState('connecting');
+                     audioEl.src = streamSrc;
+                     audioEl.play().catch(() => setAudioState('error'));
+                  } else {
+                     audioEl.pause();
+                     audioEl.removeAttribute('src');
+                     audioEl.load();
+                     setAudioState('idle');
+                  }
+                 });
+
+                  audioEl.addEventListener('playing', () => setAudioState('playing'));
+                  audioEl.addEventListener('waiting', () => setAudioState('connecting'));
+                  audioEl.addEventListener('error', () => setAudioState('error'));
+                  audioEl.addEventListener('pause', () => setAudioState('idle'));
+
+                  audioVolume.addEventListener('input', () => {
+                  audioEl.volume = audioVolume.value / 100;
+                  });
+
+                  setAudioState('idle');
                  }
 
         </script>
