@@ -1,4 +1,6 @@
-Is based on the code: https://github.com/andrewmacrides-web/M0FXB-HAMTECH-Andreas/tree/main MOD by SP2ONG
+Is based on the code: [M0FXB](https://github.com/andrewmacrides-web/M0FXB-HAMTECH-Andreas/tree/main) - MOD by SP2ONG
+
+-----------------------------------------------------------------------------------------------------------------------------------
 
 **INSTALACJA**
 ```
@@ -95,6 +97,7 @@ systemctl restart asl-dashboard-collector
 ```
 
 
+-----------------------------------------------------------------------------------------------------------------------------------
 
 
 ![ASL Dashboard](https://github.com/radioprj/ASL-Dashboard/blob/main/asl-dashboard.png)
