@@ -35,6 +35,19 @@ systemctl start asl3-update-astdb.service
 
 systemctl enable --now asl-dashboard-collector
 ```
+Uruchomienie aktualizacji bazy danych znaków i numerów nodów odbywa się przy bootowaniu oraz co 4 godziny
+, ale możemy zmienić częstotliwość aktualizacji na np. 12 h, czyli 2 razy dziennie. Należy zrobić edycje pliku:
+
+```
+sudo /etc/systemd/system/asl3-update-astdb.timer
+```
+zamienić 4h na 12h w linii **OnUnitInactiveSec=4h**
+
+Zapisać plik i zrobić:
+```
+sudo systemctl daemon-reload
+sudo systemctl restart asl3-update-astdb.timer
+```
 
 Następnie ustaw uprawnienia www-data do wykonywania poleceń w Asterisku:
 ```
@@ -45,7 +58,7 @@ visudo -cf /etc/sudoers.d/asl-dashboard >/dev/null
 ```
 ⚠️ Uwaga bezpieczeństwa: powyższa reguła daje kontu `www-data` (czyli serwerowi WWW) prawo do uruchamiania Asteriska z pełnymi uprawnieniami roota, bez ograniczenia argumentów. To świadomy kompromis, dzięki któremu dashboard może wysyłać komendy do repeatera — ale oznacza też, że każda luka w kodzie PHP tego dashboardu (obecna lub przyszła) daje w praktyce pełną kontrolę nad Asteriskiem. Jeśli wystawiasz ten dashboard poza swoją sieć domową, upewnij się, że sekcja `[security]` w `config.ini` (patrz niżej) jest poprawnie skonfigurowana.
 
-Aktywuj w `rpt.conf` komendę `806` do rozłączania wszystkich nodów — potrzebne tylko jeśli chcesz korzystać z klawisza "Disconnect All":
+Aktywuj w `rpt.conf` komendę `806` do rozłączania wszystkich nodów — potrzebne tylko, jeśli chcesz korzystać z klawisza "Disconnect All":
 ```
 sudo -s
 nano /etc/asterisk/rpt.conf
