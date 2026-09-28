@@ -119,6 +119,17 @@ systemctl restart asl-dashboard-collector
 ```
 
 
+**DODATKI**
+
+Możesz wykorzystać z dashboard polskie pliki językowe 
+
+https://github.com/radioprj/ASL-sound-pl
+
+oraz różne skrypty i modyfikacji **asl-utils**
+
+https://github.com/radioprj/asl-utils
+
+
 -----------------------------------------------------------------------------------------------------------------------------------
 
 
