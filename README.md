@@ -34,6 +34,9 @@ systemctl enable --now asl3-update-astdb.timer
 systemctl start asl3-update-astdb.service
 
 systemctl enable --now asl-dashboard-collector
+
+# usunięcie plików pobranych z github
+rm -rf /opt/ASL-dashboard
 ```
 Uruchomienie aktualizacji bazy danych znaków i numerów nodów odbywa się przy bootowaniu oraz co 4 godziny
 , ale możemy zmienić częstotliwość aktualizacji na np. 12 h, czyli 2 razy dziennie. Należy zrobić edycje pliku:
@@ -116,6 +119,9 @@ chmod -R g+rX /var/www/html
 # collector.php działa jako długo żyjący proces - same pliki na dysku
 # się zaktualizowały, ale trzeba zrestartować proces, żeby wczytał nowy kod
 systemctl restart asl-dashboard-collector
+
+# usunięcie plików pobranych z github
+rm -rf /opt/ASL-dashboard
 ```
 
 
