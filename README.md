@@ -11,8 +11,8 @@ apt-get update --allow-releaseinfo-change
 apt-get install -y apache2 libapache2-mod-php php-cli apache2-utils git
 systemctl restart apache2
 
-rm -rf /tmp/ASL-dashboard
-cd /tmp
+rm -rf /opt/ASL-dashboard
+cd /opt
 git clone https://github.com/radioprj/ASL-dashboard.git
 cd ASL-dashboard
 rsync -av --exclude='.git*' ./ /var/www/html/
@@ -103,8 +103,8 @@ sudo nano buttons.ini
 
 ```
 sudo -s
-rm -rf /tmp/ASL-dashboard
-cd /tmp
+rm -rf /opt/ASL-dashboard
+cd /opt
 git clone https://github.com/radioprj/ASL-dashboard.git
 cd ASL-dashboard
 rsync -av --exclude='.git*' --exclude='config.ini' --exclude='buttons.ini' ./ /var/www/html/
