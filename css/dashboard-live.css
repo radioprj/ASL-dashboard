@@ -1293,7 +1293,7 @@ footer .source-link {
     height: 36px;
     flex-shrink: 0;
     background: #0c141d;
-    border: 1px solid var(--lcd-cyan-dim);
+    border: 3px solid var(--lcd-cyan-dim);
     border-radius: 50%;
     color: var(--lcd-cyan);
     font-size: 14px;
@@ -1307,9 +1307,9 @@ footer .source-link {
 }
 
 .audio-toggle-btn.playing {
-    background: rgba(255, 23, 68, 0.15);
-    border-color: #ff1744;
-    color: #ff4444;
+    background: rgba(23, 255, 52, 0.12);
+    border-color: #2e7d32;
+    color: #63de69;
 }
 
 .audio-toggle-btn.connecting {
@@ -1340,8 +1340,8 @@ footer .source-link {
 }
 
 .audio-live-dot.active {
-    background: #ff1744;
-    box-shadow: 0 0 6px #ff1744;
+    background: #44ff7a;
+    box-shadow: 0 0 6px #44ff7a;
     animation: power-pulse 1s infinite alternate;
 }
 

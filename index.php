@@ -3,13 +3,22 @@
 $config = parse_ini_file('config.ini', true);
 $nodeNumber = isset($config['node']['number']) ? $config['node']['number'] : '123456';
 $nodeTitle = isset($config['node']['callsign']) ? $config['node']['callsign'] : 'N0CALL';
-$audioUrl = isset($config['audio']['stream_url']) ? trim($config['audio']['stream_url']) : '';
 $audioDesc = isset($config['audio']['description']) ? trim($config['audio']['description']) : '';
 
 $buttons = parse_ini_file('buttons.ini', true);
 
 require __DIR__ . '/lib/ipaccess.php';
 $isInternalClient = is_internal_client(load_allowed_networks($config));
+
+// ---- Live audio (WebRTC / MediaMTX) ----
+// webrtc_enabled  - wlacza player (domyslnie wylaczony)
+// webrtc_external - yes = player widoczny rowniez dla klientow spoza sieci z config.ini
+// webrtc_path     - sciezka MediaMTX (domyslnie numer noda); adres WHEP to zawsze /whep/<path>/whep
+$webrtcEnabled  = filter_var($config['audio']['webrtc_enabled']  ?? false, FILTER_VALIDATE_BOOLEAN);
+$webrtcExternal = filter_var($config['audio']['webrtc_external'] ?? false, FILTER_VALIDATE_BOOLEAN);
+$webrtcPath     = preg_replace('/[^A-Za-z0-9_-]/', '', (string)($config['audio']['webrtc_path'] ?? $nodeNumber));
+if ($webrtcPath === '') { $webrtcPath = preg_replace('/[^A-Za-z0-9_-]/', '', (string)$nodeNumber); }
+$showAudioPlayer = $webrtcEnabled && $webrtcPath !== '' && ($isInternalClient || $webrtcExternal);
 
 ?>
 <!DOCTYPE html>
@@ -143,11 +152,10 @@ $isInternalClient = is_internal_client(load_allowed_networks($config));
 
                 <!-- Buttons for Status, Bubble Map, ASL MON -->
 
-                    <?php if ($audioUrl !== ''): ?>
+                    <?php if ($showAudioPlayer): ?>
                         <div class="live-audio-bar">
-                          <audio id="node-audio" preload="none">
-                          <source src="<?php echo htmlspecialchars($audioUrl); ?>">
-                          </audio>
+                          <audio id="node-audio"
+                                 data-whep-path="<?php echo htmlspecialchars($webrtcPath); ?>"></audio>
                           <button type="button" id="audio-toggle" class="audio-toggle-btn" aria-label="Play live audio">
                           <span class="audio-icon">&#9654;</span>
                           </button>
@@ -156,7 +164,7 @@ $isInternalClient = is_internal_client(load_allowed_networks($config));
                           <span class="audio-status" id="audio-status" data-desc="<?php echo htmlspecialchars($audioDesc); ?>">NODE AUDIO STREAM</span>
                           </div>
                           <div class="audio-volume">
-                              <span class="audio-vol-icon">&#128266;</span>
+                              <span class="audio-vol-icon" id="audio-mute" role="button" tabindex="0" title="Mute" aria-label="Mute" aria-pressed="false" style="cursor:pointer;user-select:none">&#128266;</span>
                               <input type="range" id="audio-volume" min="0" max="100" value="80" class="audio-volume-slider">
                            </div>
                        </div>
@@ -674,6 +682,12 @@ $isInternalClient = is_internal_client(load_allowed_networks($config));
                    document.addEventListener('webkitfullscreenchange', updateFsButton);
                  }
 
+                /* ============================================================
+                 * Live audio - WebRTC (WHEP) z MediaMTX
+                 * Opoznienie ~1-2 s zamiast ~18 s przy <audio> + Icecast.
+                 * Stan UI wynika ze stanu polaczenia WebRTC (nie z pakietow audio),
+                 * bo przy ciszy na nodzie nie plyna zadne pakiety, a polaczenie jest OK.
+                 * ============================================================ */
                 const audioEl        = document.getElementById('node-audio');
                 const audioToggleBtn = document.getElementById('audio-toggle');
                 const audioLiveDot   = document.getElementById('audio-live-dot');
@@ -686,54 +700,245 @@ $isInternalClient = is_internal_client(load_allowed_networks($config));
                 }
 
                 if (audioEl && audioToggleBtn) {
-                    const streamSrc = audioEl.querySelector('source').src;
+                    const RETRY_MS            = 5000;   // odstep miedzy probami polaczenia
+                    const CONNECT_TIMEOUT_MS  = 15000;  // max czas na nawiazanie polaczenia
+                    const DISCONNECT_GRACE_MS = 8000;   // tyle czekamy na samoistny powrot po 'disconnected'
+                    const ICE_GATHER_MS       = 2000;   // max czas zbierania kandydatow ICE
+
                     audioEl.volume = audioVolume.value / 100;
 
-                function setAudioState(state) {
-                  audioToggleBtn.classList.remove('playing', 'connecting', 'error');
-                  audioLiveDot.classList.remove('active');
+                    let wantPlaying    = false;  // intencja uzytkownika
+                    let uiState        = 'idle';
+                    let failedAttempts = 0;
+                    let noStream       = false;  // ostatnia proba: 404 = brak zrodla na sciezce
+                    let attemptId      = 0;      // uniewaznia spoznione callbacki starych prob
+                    let pc             = null;
+                    let sessionUrl     = null;
+                    let reconnectTimer = null;
+                    let connectTimer   = null;
+                    let disconnectTimer = null;
 
-                  if (state === 'playing') {
-                     audioToggleBtn.innerHTML = '<span class="audio-icon">&#9632;</span>';
-                     audioToggleBtn.classList.add('playing');
-                     audioLiveDot.classList.add('active');
-                     audioStatus.textContent = withDesc('LIVE');
-                  } else if (state === 'connecting') {
-                     audioToggleBtn.classList.add('connecting');
-                     audioStatus.textContent = withDesc('CONNECTING…');
-                  } else if (state === 'error') {
-                     audioToggleBtn.classList.add('error');
-                     audioStatus.textContent = withDesc('STREAM ERROR');
-                  } else {
-                     audioToggleBtn.innerHTML = '<span class="audio-icon">&#9654;</span>';
-                     audioStatus.textContent = withDesc('NODE AUDIO STREAM');
-                  }
+                    function setAudioState(state, label) {
+                        uiState = state;
+                        audioToggleBtn.classList.remove('playing', 'connecting', 'error');
+                        audioLiveDot.classList.remove('active');
+
+                        if (state === 'playing') {
+                            audioToggleBtn.innerHTML = '<span class="audio-icon">&#9632;</span>';
+                            audioToggleBtn.classList.add('playing');
+                            audioLiveDot.classList.add('active');
+                            audioStatus.textContent = withDesc('LIVE');
+                        } else if (state === 'connecting') {
+                            audioToggleBtn.innerHTML = '<span class="audio-icon">&#9632;</span>';
+                            audioToggleBtn.classList.add('connecting');
+                            audioStatus.textContent = withDesc(label || 'CONNECTING…');
+                        } else if (state === 'error') {
+                            audioToggleBtn.innerHTML = '<span class="audio-icon">&#9654;</span>';
+                            audioToggleBtn.classList.add('error');
+                            audioStatus.textContent = withDesc('STREAM ERROR');
+                        } else {
+                            audioToggleBtn.innerHTML = '<span class="audio-icon">&#9654;</span>';
+                            audioStatus.textContent = withDesc('NODE AUDIO STREAM');
+                        }
+                    }
+
+                    function waitingLabel() {
+                        if (noStream) return 'WAITING FOR STREAM…';
+                        if (failedAttempts >= 3) return 'NO CONNECTION - RETRYING…';
+                        return 'CONNECTING…';
+                    }
+
+                    function whepEndpoint() {
+                        // Ten sam serwer co dashboard (Apache -> MediaMTX); dziala po HTTP i HTTPS
+                        return `/whep/${audioEl.dataset.whepPath}/whep`;
+                    }
+
+                    function waitIceGathering(peer, timeoutMs) {
+                        return new Promise(resolve => {
+                            if (peer.iceGatheringState === 'complete') { resolve(); return; }
+                            const done = () => {
+                                clearTimeout(t);
+                                peer.removeEventListener('icegatheringstatechange', check);
+                                resolve();
+                            };
+                            const check = () => { if (peer.iceGatheringState === 'complete') done(); };
+                            const t = setTimeout(done, timeoutMs);
+                            peer.addEventListener('icegatheringstatechange', check);
+                        });
+                    }
+
+                    function closePeer() {
+                        clearTimeout(connectTimer);
+                        clearTimeout(disconnectTimer);
+                        if (pc) {
+                            pc.onconnectionstatechange = null;
+                            pc.ontrack = null;
+                            try { pc.close(); } catch (e) {}
+                            pc = null;
+                        }
+                        if (sessionUrl) {
+                            fetch(sessionUrl, { method: 'DELETE', keepalive: true }).catch(() => {});
+                            sessionUrl = null;
+                        }
+                        audioEl.srcObject = null;
+                    }
+
+                    function scheduleReconnect() {
+                        if (!wantPlaying) return;
+                        attemptId++;            // uniewaznia trwajaca probe
+                        closePeer();
+                        failedAttempts++;
+                        setAudioState('connecting', waitingLabel());
+                        clearTimeout(reconnectTimer);
+                        reconnectTimer = setTimeout(connect, RETRY_MS);
+                    }
+
+                    function stopPlayback() {
+                        wantPlaying = false;
+                        attemptId++;
+                        failedAttempts = 0;
+                        noStream = false;
+                        clearTimeout(reconnectTimer);
+                        closePeer();
+                        audioEl.pause();
+                        setAudioState('idle');
+                    }
+
+                    async function connect() {
+                        if (!wantPlaying) return;
+                        const id = ++attemptId;
+                        closePeer();
+                        setAudioState('connecting', waitingLabel());
+
+                        const endpoint = whepEndpoint();
+                        console.info('Audio WHEP endpoint:', endpoint);
+                        connectTimer = setTimeout(() => {
+                            if (id === attemptId) { noStream = false; scheduleReconnect(); }
+                        }, CONNECT_TIMEOUT_MS);
+
+                        try {
+                            const peer = new RTCPeerConnection();
+                            pc = peer;
+                            peer.addTransceiver('audio', { direction: 'recvonly' });
+
+                            peer.ontrack = (ev) => {
+                                if (id !== attemptId) return;
+                                audioEl.srcObject = (ev.streams && ev.streams[0]) ? ev.streams[0] : new MediaStream([ev.track]);
+                                audioEl.play().catch(err => {
+                                    if (err && err.name === 'NotAllowedError') {
+                                        stopPlayback();
+                                        setAudioState('error');
+                                        showToast('Browser blocked audio - click play again', 'error');
+                                    }
+                                });
+                            };
+
+                            peer.onconnectionstatechange = () => {
+                                if (id !== attemptId) return;
+                                const st = peer.connectionState;
+                                if (st === 'connected') {
+                                    clearTimeout(connectTimer);
+                                    clearTimeout(disconnectTimer);
+                                    failedAttempts = 0;
+                                    noStream = false;
+                                    setAudioState('playing');
+                                } else if (st === 'disconnected') {
+                                    setAudioState('connecting', 'RECONNECTING…');
+                                    clearTimeout(disconnectTimer);
+                                    disconnectTimer = setTimeout(() => {
+                                        if (id === attemptId) { noStream = false; scheduleReconnect(); }
+                                    }, DISCONNECT_GRACE_MS);
+                                } else if (st === 'failed' || st === 'closed') {
+                                    // serwer zamknal sesje (np. zniknelo zrodlo) lub ICE sie nie udal
+                                    noStream = false;
+                                    scheduleReconnect();
+                                }
+                            };
+
+                            const offer = await peer.createOffer();
+                            await peer.setLocalDescription(offer);
+                            await waitIceGathering(peer, ICE_GATHER_MS);
+                            if (id !== attemptId) return;
+
+                            const res = await fetch(endpoint, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/sdp' },
+                                body: peer.localDescription.sdp
+                            });
+                            if (id !== attemptId) return;
+                            console.info('Audio WHEP response:', res.status);
+
+                            if (res.status === 404) {          // sciezka istnieje, ale nikt nie publikuje
+                                noStream = true;
+                                scheduleReconnect();
+                                return;
+                            }
+                            if (!res.ok) throw new Error('WHEP HTTP ' + res.status);
+
+                            // Adres sesji (do DELETE) = endpoint + ostatni segment Location; dziala tez za reverse proxy
+                            const loc = res.headers.get('Location');
+                            if (loc) sessionUrl = endpoint.replace(/\/+$/, '') + '/' + loc.split('/').pop();
+
+                            const answer = await res.text();
+                            if (id !== attemptId) return;
+                            await peer.setRemoteDescription({ type: 'answer', sdp: answer });
+                        } catch (err) {
+                            if (id !== attemptId) return;
+                            console.error('Audio (WHEP) error:', err);
+                            noStream = false;
+                            scheduleReconnect();
+                        }
+                    }
+
+                    audioToggleBtn.addEventListener('click', () => {
+                        if (wantPlaying) {
+                            stopPlayback();
+                            return;
+                        }
+                        wantPlaying = true;
+                        failedAttempts = 0;
+                        noStream = false;
+                        connect();
+                    });
+
+                    // Mute: klik w ikone glosnika; ruch suwaka przy wyciszeniu wlacza dzwiek
+                    const audioMuteBtn = document.getElementById('audio-mute');
+
+                    function updateMuteIcon() {
+                        if (!audioMuteBtn) return;
+                        audioMuteBtn.innerHTML = audioEl.muted ? '&#128263;' : '&#128266;';
+                        audioMuteBtn.title = audioEl.muted ? 'Unmute' : 'Mute';
+                        audioMuteBtn.setAttribute('aria-label', audioMuteBtn.title);
+                        audioMuteBtn.setAttribute('aria-pressed', audioEl.muted ? 'true' : 'false');
+                    }
+
+                    function toggleMute() {
+                        audioEl.muted = !audioEl.muted;
+                        updateMuteIcon();
+                    }
+
+                    if (audioMuteBtn) {
+                        audioMuteBtn.addEventListener('click', toggleMute);
+                        audioMuteBtn.addEventListener('keydown', (e) => {
+                            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleMute(); }
+                        });
+                    }
+
+                    audioVolume.addEventListener('input', () => {
+                        audioEl.volume = audioVolume.value / 100;
+                        if (audioEl.muted) { audioEl.muted = false; updateMuteIcon(); }
+                    });
+
+                    // Powrot sieci: nie czekaj na kolejny odstep miedzy probami
+                    window.addEventListener('online', () => {
+                        if (wantPlaying && uiState !== 'playing') {
+                            clearTimeout(reconnectTimer);
+                            connect();
+                        }
+                    });
+
+                    setAudioState('idle');
                 }
-
-                  audioToggleBtn.addEventListener('click', () => {
-                  if (audioEl.paused) {
-                     setAudioState('connecting');
-                     audioEl.src = streamSrc;
-                     audioEl.play().catch(() => setAudioState('error'));
-                  } else {
-                     audioEl.pause();
-                     audioEl.removeAttribute('src');
-                     audioEl.load();
-                     setAudioState('idle');
-                  }
-                 });
-
-                  audioEl.addEventListener('playing', () => setAudioState('playing'));
-                  audioEl.addEventListener('waiting', () => setAudioState('connecting'));
-                  audioEl.addEventListener('error', () => setAudioState('error'));
-                  audioEl.addEventListener('pause', () => setAudioState('idle'));
-
-                  audioVolume.addEventListener('input', () => {
-                  audioEl.volume = audioVolume.value / 100;
-                  });
-
-                  setAudioState('idle');
-                 }
 
         </script>
     </body>

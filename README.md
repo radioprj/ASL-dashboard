@@ -88,15 +88,16 @@ internal_networks[] = "192.168.1.0/24"
 ```
 Podmień `192.168.1.0/24` na realny zakres swojej sieci lokalnej.
 
-Możesz słuchać audio z noda ASL który udostępnia swój audio stream, lub np z swojego lokalnego noda.
-Wpisz tylko jeden url i jego opis. np adres audio stream HUBNet :
+Możesz słuchać audio z swojego ASL Node.
+Wymagana jest instlacja **MediaMTX** patrz pakiet https://github.com/radioprj/asl-utils
 
-```ini
-[audio]
-stream_url = "https://g7rpg.hubnetwork.uk/stream"
-description = "HUBNet UK"
 ```
-
+[audio]
+description = "ASL Node"
+webrtc_enabled  = no ; czy player dostepny na dashboard
+webrtc_external = no ; czy player dostepny z poza sieci loklanej (wymaga otwarcia portu 8189/udp)
+; webrtc_path   = 123456   ; opcjonalnie, domyślnie numer noda
+```
 Jeśli chcesz zmienić zawartość makr, edytuj:
 ```
 sudo nano buttons.ini
