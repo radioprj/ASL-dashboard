@@ -37,7 +37,7 @@ $showAudioPlayer = $webrtcEnabled && $webrtcPath !== '' && ($isInternalClient ||
 	<link rel="icon" href="img/favicons/favicon-192x192.png" sizes="192x192" type="image/png">
 	<link rel="icon" href="img/favicons/favicon-512x512.png" sizes="512x512" type="image/png">
 	<link rel="icon" href="img/favicons/favicon.ico" type="image/png">
-
+        <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="css/dashboard-live.css">
     </head>
     <body>
